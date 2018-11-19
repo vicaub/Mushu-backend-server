@@ -1,3 +1,4 @@
-# mushu-back
+# 2018 Mushu App Environnementale
 
-Back for mushu env app
+# Python backend
+
