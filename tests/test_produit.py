@@ -23,5 +23,5 @@ except TypeError:
     pass
 
 import categories.viandes as viandes
-viandes.viande
 
+var = viandes.viande
