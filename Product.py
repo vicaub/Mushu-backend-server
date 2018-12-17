@@ -1,5 +1,6 @@
 import numbers
 
+
 class Product:
     def __init__(self, name, cfp=None, children=None):
         if not isinstance(name, str):
