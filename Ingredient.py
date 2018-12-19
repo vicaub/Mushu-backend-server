@@ -5,7 +5,9 @@ class Ingredient:
     expression = r"[0-9]+[ .,]?[0-9]*?[ .]?[%]"
     expression_compilee = re.compile(expression)
 
-    def __init__(self, name, ingredient_string, percent=None, children=[]):
+    def __init__(self, name, ingredient_string, percent=None, children=None):
+        if children is None:
+            children = []
         self.name = name
         self.percent = percent
         self.children = children
@@ -57,17 +59,24 @@ class Ingredient:
     def update_percent(self):
         #TODO - Camille owner
         # if il y a un pourcentage et un if il y a pas de pourcentage
+        information_from_label = False
         if self.percent is None:
             if Ingredient.expression_compilee.search(self.name) is not None:
                 self.percent_from_name()
+                information_from_label = True
                 print("le pourcentage a été assigné")
-            else: # a appliquer une fois qu'on a parser toutes la listes
-                #il faut faire en sorte de les attribuer alléatoirement
-
-
+            else:
+                pass
         if self.children and len(self.children) > 0:
             for child in self.children:
                 child.update_percent()
+
+        if information_from_label == False: #Aucun pourcentage précis n'est présent sur l'étiquette
+            self.percent_from_nothing()
+
+    def complete_percent_after(self):
+        # pour remplir les self.children qui n'ont pas de pourcentage en fonction des autres.
+        pass
 
     def percent_from_nothing(self):
         if len(self.children) >= 5:
@@ -76,11 +85,14 @@ class Ingredient:
             self.children[2].percent = 20
             self.children[3].percent = 10
             self.children[4].percent = 10
-            next = 0
+            for i in range(5, len(self.children)):
+                self.children[i].percent = 0
         elif len(self.children) >= 2:
             self.children[0].percent = 60
             self.children[1].percent = 40
-        else:
+            for i in range(2, len(self.children)):
+                self.children[i].percent = 0
+        elif  len(self.children) > 0:
             self.children[0].percent = 80
 
     def percent_from_name(self):
@@ -88,6 +100,7 @@ class Ingredient:
         index_to_delete = int(regex[0].find('%'))  # renvoie une liste comprenant l'element cherché
         resultat = regex[0][0:index_to_delete]  # on supprime le sigle pourcentage
         resultat = float(resultat.replace(",", "."))
+        self.name = self.name[:regex.start()]
         self.percent = resultat
 
     def display_ingredients(self):
@@ -99,18 +112,26 @@ class Ingredient:
             print(self.name)
 
 
-if __name__ == "__main__":
-    test = Ingredient("test", "Garniture aux fruits rouges (griotte (eau, sucre), groseille, cassis, mûre, framboise), pâte à crumble (farine de blé, eau), acidifiant, colorant")
-    test.parse_string(test.ingredient_string)
-
-    print("***" + test.children[0].name)
-    print("***" + test.children[1].name)
-    print("***", test.children[0].ingredient_string)
-    print(test.children[1].ingredient_string)
-    print(test.children[2].name)
-    print(test.children[3].name)
+# if __name__ == "__main__":
+#     test = Ingredient("test", "Garniture aux fruits rouges (griotte (eau, sucre), groseille, cassis, mûre, framboise), pâte à crumble (farine de blé, eau), acidifiant, colorant")
+#     test.parse_string(test.ingredient_string)
+#
+#     print("***" + test.children[0].name)
+#     print("***" + test.children[1].name)
+#     print("***", test.children[0].ingredient_string)
+#     print(test.children[1].ingredient_string)
+#     print(test.children[2].name)
+#     print(test.children[3].name)
 
 if __name__ == '__main__':
-    pizza = Ingredient("garniture 65,7%", "tomate 12%")
+    pizza = Ingredient("pizza", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
+                                          "(farine 90%, eau 10%)",percent=100,
+                       children=[Ingredient("garniture 65,7%","(fromage 50%, tomate 12%, fraise 8%)",
+                                            children=[Ingredient("fromage 50%", "fromage 50%"),
+                                                      Ingredient("tomate 12%", "tomate 12%"),
+                                                      Ingredient("fraise 8%", "fraise 8%")]),
+                                 Ingredient("pate 44,3%", "(farine 90%, eau 10%)",
+                                            children=[Ingredient("farine 90%,","farine 90%,"),
+                                                      Ingredient("eau 10%,", "eau 10%,")])])
     a = pizza.update_percent()
-    print(pizza.percent)
+    print(pizza)
