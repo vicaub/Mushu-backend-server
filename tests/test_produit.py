@@ -24,4 +24,7 @@ except TypeError:
 
 import categories.viandes as viandes
 
-var = viandes.viande
+var = viandes.viandes
+
+print(viandes.viandes.cfp)
+print(viandes.lapin2.cfp)
