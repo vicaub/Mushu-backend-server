@@ -61,14 +61,13 @@ class Ingredient:
             if Ingredient.expression_compilee.search(self.name) is not None:
                 self.percent_from_name()
                 print("le pourcentage a été assigné")
-        else: # a appliquer une fois qu'on a parser toutes la listes
-            #il faut faire en sorte de les attribuer alléatoirement
-            for i in range(len(self.children)):
-                self.percent_from_nothing()
-                if self.children[i].children is not None:
-                    pass
+            else: # a appliquer une fois qu'on a parser toutes la listes
+                #il faut faire en sorte de les attribuer alléatoirement
 
-            pass
+
+        if self.children and len(self.children) > 0:
+            for child in self.children:
+                child.update_percent()
 
     def percent_from_nothing(self):
         if len(self.children) >= 5:
@@ -77,6 +76,7 @@ class Ingredient:
             self.children[2].percent = 20
             self.children[3].percent = 10
             self.children[4].percent = 10
+            next = 0
         elif len(self.children) >= 2:
             self.children[0].percent = 60
             self.children[1].percent = 40
