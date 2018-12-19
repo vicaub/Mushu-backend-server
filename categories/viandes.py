@@ -35,7 +35,8 @@ porc = Product("porc", 5.9, [
     Product("lardon", 4.5),
     Product("saucisse de porc", 4.4),
     Product("saucisson de porc", 5.1),
-    Product("Filet mignon de porc", 5.11)
+    Product("Filet mignon de porc", 5.11),
+    Product("jambon")
 ])
 
 ## LAPIN
@@ -49,5 +50,4 @@ agneau = Product("agneau", 25.58, [
     Product("gigot d'agneau", 34.69)
 ])
 
-
-viande = Product("viande", children=[volaille, boeuf, veau, porc, lapin, agneau])
+viandes = Product("viande", children=[volaille, boeuf, veau, porc, lapin, agneau])

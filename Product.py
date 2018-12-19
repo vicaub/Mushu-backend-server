@@ -13,3 +13,14 @@ class Product:
         self.name = name
         self.cfp = cfp
         self.children = children
+
+    def get_leaves(self):
+        if self.children and len(self.children) > 0:
+            leaves = []
+            for child in self.children:
+                leaves += child.get_leaves()
+            return leaves
+        else:
+            return [self]
+
+        # return list(map(lambda child: child.get_name(), self.children))
