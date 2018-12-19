@@ -1,10 +1,10 @@
 from Product import Product
 
 poissons = Product("viande", children=[
-    Product("poisson", 3.49[
+    Product("poisson", 3.49, [
         Product("poisson sauvage", None, [
             Product("poisson sauvage entier", 5.5),
-            Product("poisson sauvage filet", 9.2)
+            Product("poisson sauvage filet", 9.2),
         ])
     ]),
     Product("truite", 4.2, [
@@ -21,19 +21,19 @@ poissons = Product("viande", children=[
         Product("thon en boite", 3.2)
     ])
     ,
-    Product("saumon", 3.47[
+    Product("saumon", 3.47, [
         Product("saumon elevage", 5.2),
-        Product("truite fumee", None[
+        Product("truite fumee", None, [
             Product("truite fumee elevage", 5.5)
         ])
     ]),
     Product("bar", None, [
-        Product("bar elevage", None[
+        Product("bar elevage", None, [
             Product("bar elevage filet", 9.2)
         ])
     ]),
     Product("dorade", None, [
-        Product("dorade elevage", None[
+        Product("dorade elevage", None, [
             Product("dorade elevage filet", 9.2)
         ])
     ]),
