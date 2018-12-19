@@ -1,6 +1,5 @@
 from Product import Product
 
-
 legumes = Product('Legume', None, [
     Product('tomate', None, [
         Product('sauce tomate', 2.9),
