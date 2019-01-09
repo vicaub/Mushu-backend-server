@@ -11,8 +11,12 @@ class Product:
             raise TypeError("The children should be a list of Products or None")
 
         self.name = name
-        self.cfp = cfp
+        self.__cfp = cfp
         self.children = children
+        self.parent = None
+        if self.children:
+            for child in self.children:
+                child.parent = self
 
     def get_leaves(self):
         if self.children and len(self.children) > 0:
@@ -24,3 +28,57 @@ class Product:
             return [self]
 
         # return list(map(lambda child: child.get_name(), self.children))
+
+    def convert_to_dict(self):
+        """s
+        """
+        dict_product = {}
+        if self.children:
+            for child in self.children:
+                dict_product[child] = child.name
+
+        return dict_product
+
+    def retrieve_missing_cfp(self):
+        """
+        when cfp is None get average children cfp or parent cfp
+        """
+        cfp = None
+        if self.children:
+            # first get children cfp
+            i = 0
+            for child in self.children:
+                if child.__cfp:
+                    if i == 0:
+                        cfp = 0
+                    cfp += child.__cfp
+                    i += 1
+            if i > 0:
+                cfp /= i
+            return cfp
+        if not cfp:
+            # still no cfp get parent cfp
+            if self.parent.__cfp:
+                return self.parent.__cfp
+            else:
+                return self.parent.retrieve_missing_cfp()
+
+    @property
+    def cfp(self):
+        """
+        getter for cfp attribute
+        """
+        cfp = self.__cfp
+        if not cfp:
+            cfp = self.retrieve_missing_cfp()
+        return cfp
+
+
+    def __repr__(self):
+        """
+        Convienient format to print Product objects
+        """
+        product_print = self.name + ", cfp: " + str(self.__cfp)
+        # if self.children:
+        #     product_print += ", " + str(self.children)
+        return product_print

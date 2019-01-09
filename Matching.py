@@ -5,9 +5,13 @@ from fuzzywuzzy import process
 
 
 class Matching:
+    """
+    Utility class to compute carbon footprints of Ingredient objects by comparing them to Product database
+    """
+
     def __init__(self):
         products = [
-            fruits.fruit,
+            fruits.fruits,
             legumes.legumes,
             poissons.poissons,
             produits_laitiers.produits_laitiers,
@@ -16,79 +20,66 @@ class Matching:
 
         self.database = Product("database", None, products)
 
-    def browse_database(self, openfoodfact_ingredient, ingredient):
-        best_result = process.extractOne(openfoodfact_ingredient, {ingredient: ingredient.name})
-
-        if ingredient.children and len(ingredient.children) > 0:
-            for child in ingredient.children:
-                child_best_score = process.extractOne(openfoodfact_ingredient, {child: child.name})
-                if child_best_score[1] > best_result[1]:
-                    best_result = child_best_score
-            return best_result
+    def browse_database(self, ingredient_name, product):
+        """
+        :param ingredient_name: string ingredient name to match with product names in product and product children
+        :param product: product object to be browse for matching with ingredient (start with full Product database)
+        :return: tuple object (best matching score, product object that correspond to best match)
+        """
+        if product.children and len(product.children) > 0:
+            best_score, best_product = process.extractOne(ingredient_name, product.convert_to_dict())[1:3]
+            for child in product.children:
+                child_best_score, child_best_product = self.browse_database(ingredient_name, child)
+                if child_best_score > best_score:
+                    best_product = child_best_product
+                    best_score = child_best_score
+            return best_score, best_product
         else:
-            return None
+            return 0, None
 
+    def match_ingredient(self, ingredient_name):
+        """
+        :param ingredient_name: string ingredient name to match with product names in db
+        :return: Best Product object match with ingredient_name
+        """
+        best_score, best_product = self.browse_database(ingredient_name, self.database)
+        print("ingredient", ingredient_name, "score", best_score, "product", best_product)
 
+        return best_product
 
-
-    def match_ingredient(self, openfoodfact_ingredient):
-        # openfoodfact_ingredient -> product in database
-        best_choice = self.browse_database(openfoodfact_ingredient, self.database)
-
-        return best_choice[2]
-
-    def compute_footprint(self, ingredient):
-        """match ingredient names with db and sum cft with percent"""
-
+    def compute_footprint(self, ingredient_obj):
+        """
+        Match ingredient names with db and sum cft with percent
+        :param ingredient_obj: Ingredient object with all children and percentages already parsed
+        :return: total footprint for this ingredient in carbon kg/product kg
+        """
         footprint = 0
 
-        # match children ingredients with database
-        if ingredient.children and len(ingredient.children) > 0:
-            for child in ingredient.children:
-                footprint += self.compute_footprint(child) * child.percent
+        if ingredient_obj.children and len(ingredient_obj.children) > 0:
+            # iterate function over all children and apply percentages
+            for child in ingredient_obj.children:
+                footprint += self.compute_footprint(child) * child.percent / 100
+        else:
+            # when bottom ingredient match ingredient with product in db
+            match_ingredient = self.match_ingredient(ingredient_obj.name)
+            footprint += match_ingredient.cfp
 
-
-        # get footprint for them
-
-        # sum footprints with percentage
-
-        return 0.12
+        return footprint
 
 
 if __name__ == "__main__":
+    pizza = Ingredient("pizza", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
+                                "(farine 90%, eau 10%)", percent=100,
+                       children=[Ingredient("garniture", "(fromage 50%, tomate 12%, fraise 8%)", percent=65.7,
+                                            children=[Ingredient("fromage", "fromage 50%", percent=50),
+                                                      Ingredient("tomate", "tomate 12%", percent=12),
+                                                      Ingredient("fraise", "fraise 8%", percent=8)]),
+                                 Ingredient("pate", "(farine 90%, eau 10%)", percent=44.3,
+                                            children=[Ingredient("farine,", "farine 90%,", percent=90),
+                                                      Ingredient("eau,", "eau 10%,", percent=10)])])
+    pizza2 = Ingredient("fromage", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
+                                "(farine 90%, eau 10%)", percent=100)
     matching = Matching()
-    ingredient_names = [
-        "griotte",
-        # "groseille",
-        # "farine de graines de caroube",
-        # "sucre",
-        # "sirop de glucose de blé et/ou de maïs",
-        # "eau",
-        # "Farine de blé",
-        # "pulpe de tomate",
-        "mozzarella",
-        "jambon cru fumé speck",
-        "viande de porc",
-        "roquette"
-    ]
 
-    for openfoodfact_ingredient in ingredient_names:
-        print(openfoodfact_ingredient)
-        print(matching.match_ingredient(openfoodfact_ingredient))
-
-    garniture = Ingredient("garniture", None, 50)
-    pate = Ingredient("pate à pizza", None, 50)
-
-    tomate = Ingredient("sauce tomate", None, 50)
-    mozzarella = Ingredient("mozzarella", None, 50)
-    farine = Ingredient("farine de blé", None, 100)
-
-    garniture.children = [tomate, mozzarella]
-    pate.children = [farine]
-
-    pizza = Ingredient("pizza", None, 100)
-
-    pizza.children = [garniture, pate]
-
-    matching.compute_footprint(pizza)
-
+    footprint = matching.compute_footprint(pizza)
+    print("footprint", footprint)
