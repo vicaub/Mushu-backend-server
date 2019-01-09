@@ -1,6 +1,6 @@
 from Product import Product
 
-poissons = Product("viande", children=[
+poissons = Product("poisson", children=[
     Product("poisson", 3.49, [
         Product("poisson sauvage", None, [
             Product("poisson sauvage entier", 5.5),
