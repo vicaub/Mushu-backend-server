@@ -1,7 +1,7 @@
 import re
 
-class Ingredient:
 
+class Ingredient:
     expression = r"[0-9]+[ .,]?[0-9]*?[ .]?[%]"
     expression_compilee = re.compile(expression)
 
@@ -13,44 +13,43 @@ class Ingredient:
         self.children = children
         self.ingredient_string = ingredient_string
 
-        #split_string = self.parse_string(ingredient_string)
-        #self.add_children(split_string)
+        # self.parse_string(ingredient_string)
+        # self.add_children(split_string)
 
     def __repr__(self):
         return "name: " + self.name + ", percent: " + str(self.percent) + ", children: " + str(self.children)
 
+    def parse_string(self):
+        if self.ingredient_string:
+            # TODO - Sophie owner
+            stack = []
+            start = None
 
-    def parse_string(self, ingredient_string):
-        # TODO - Sophie owner
-
-        stack = []
-        start = None
-
-        for i in range(len(ingredient_string)):
-            if type(start) != int:
-                if ingredient_string[i].isalpha():
-                    start = i
-            elif ingredient_string[i] == '(':
-                # on entre dans une parenthèse
-                stack.append(i)
-            elif ingredient_string[i] == ')':
-                # on sort d'une parenthèse
-                i_open_bracket = stack.pop()
-                if len(stack) == 0:
-                    # cela signifie qu'on a matché toutes les parenthèses ouvrantes précédentes
-                    ingr_name = ingredient_string[start:i_open_bracket]
-                    ingr_substring = ingredient_string[i_open_bracket + 1:i]
-                    self.children.append(Ingredient(ingr_name, ingr_substring))
-                    start = None
-            elif ingredient_string[i] == ',':
-                if len(stack) == 0:
-                    name = ingredient_string[start:i]
+            for i in range(len(self.ingredient_string)):
+                if type(start) != int:
+                    if self.ingredient_string[i].isalpha():
+                        start = i
+                elif self.ingredient_string[i] == '(':
+                    # on entre dans une parenthèse
+                    stack.append(i)
+                elif self.ingredient_string[i] == ')':
+                    # on sort d'une parenthèse
+                    i_open_bracket = stack.pop()
+                    if len(stack) == 0:
+                        # cela signifie qu'on a matché toutes les parenthèses ouvrantes précédentes
+                        ingr_name = self.ingredient_string[start:i_open_bracket]
+                        ingr_substring = self.ingredient_string[i_open_bracket + 1:i]
+                        print(ingr_substring)
+                        self.children.append(Ingredient(ingr_name, ingr_substring))
+                        start = None
+                elif self.ingredient_string[i] == ',':
+                    if len(stack) == 0:
+                        name = self.ingredient_string[start:i]
+                        self.children.append(Ingredient(name, None))
+                        start = None
+                elif i == len(self.ingredient_string) - 1:
+                    name = self.ingredient_string[start:i + 1]
                     self.children.append(Ingredient(name, None))
-                    start = None
-            elif i == len(ingredient_string) - 1:
-                name = ingredient_string[start:i + 1]
-                self.children.append(Ingredient(name, None))
-
 
     def add_children(self, split_string):
 
@@ -59,9 +58,8 @@ class Ingredient:
 
         return True
 
-
     def update_percent(self):
-        #TODO - Camille owner
+        # TODO - Camille owner
         # if il y a un pourcentage et un if il y a pas de pourcentage
         if not self.percent:
             if Ingredient.expression_compilee.search(self.name) is not None:
@@ -91,7 +89,7 @@ class Ingredient:
             self.children[1].percent = 40
             for i in range(2, len(self.children)):
                 self.children[i].percent = 0
-        elif  len(self.children) > 0:
+        elif len(self.children) > 0:
             self.children[0].percent = 80
 
     def percent_from_name(self):
@@ -102,37 +100,30 @@ class Ingredient:
         self.name = self.name[:regex.start()].strip()
         self.percent = resultat
 
-    def display_ingredients(self):
-        print("*********")
-        if self.children != None:
-           for el in self.children:
-               el.display_ingredients
-        else:
-            print(self.name)
+    def __repr__(self):
+        return "name: " + self.name + ", percent: " + str(self.percent) + ", " + str(self.children)
 
-
-# if __name__ == "__main__":
-#     test = Ingredient("test", "Garniture aux fruits rouges (griotte (eau, sucre), groseille, cassis, mûre, framboise), pâte à crumble (farine de blé, eau), acidifiant, colorant")
-#     test.parse_string(test.ingredient_string)
-#
-#     print("***" + test.children[0].name)
-#     print("***" + test.children[1].name)
-#     print("***", test.children[0].ingredient_string)
-#     print(test.children[1].ingredient_string)
-#     print(test.children[2].name)
-#     print(test.children[3].name)
-
+# Camille
 if __name__ == '__main__':
     pizza = Ingredient("pizza ", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
-                                          "(farine 90%, eau 10%)",percent=100,
-                       children=[Ingredient("garniture 65,7%", "(fromage 50%, tomate 12%, fraise 8%)",
+                                 "(farine 90%, eau 10%)", percent=100,
+                       children=[Ingredient("garniture 65,7%", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%)",
                                             children=[Ingredient("fromage 50%", "fromage 50%"),
                                                       Ingredient("tomate 12%", "tomate 12%"),
                                                       Ingredient("fraise 8,3%", "fraise 8%")]),
                                  Ingredient("pate 44,3%", "(farine 90%, eau 10%)",
-                                            children=[Ingredient("farine 90%,","farine 90%,"),
-                                                    Ingredient("eau 10%,", "eau 10%,")])])
+                                            children=[Ingredient("farine 90%,", "farine 90%,"),
+                                                      Ingredient("eau 10%,", "eau 10%,")])])
     print(pizza)
     pizza.update_percent()
     print(pizza)
 
+# Sophie
+if __name__ == "__main__":
+    test = Ingredient("test",
+                      "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
+    test.parse_string()
+
+    print(test)
+
+    # test.display_ingredients()
