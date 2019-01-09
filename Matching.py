@@ -22,7 +22,7 @@ class Matching:
 
     def browse_database(self, ingredient_name, product):
         """
-        :param ingredient_name: ingredient string from openfoodfact to match with product
+        :param ingredient_name: string ingredient name to match with product names in product and product children
         :param product: product object to be browse for matching with ingredient (start with full Product database)
         :return: tuple object (best matching score, product object that correspond to best match)
         """
