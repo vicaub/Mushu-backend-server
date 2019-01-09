@@ -92,12 +92,6 @@ class Ingredient:
         resultat = float(resultat.replace(",", "."))
         self.percent = resultat
 
-    def display_ingredients(self):
-        # print(self.children)
-        if self.children:
-            for i in range(len(self.children)):
-                self.children[i].display_ingredients()
-
     def __repr__(self):
         return self.name + ": " + str(self.children)
 
@@ -112,7 +106,7 @@ if __name__ == "__main__":
 
     print(test)
 
-    # test.display_ingredients()
+    #test.display_ingredients()
 
 
 #Camille
