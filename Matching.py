@@ -58,28 +58,10 @@ class Matching:
         if ingredient_obj.children and len(ingredient_obj.children) > 0:
             # iterate function over all children and apply percentages
             for child in ingredient_obj.children:
-                footprint += self.compute_footprint(child) * child.percent / 100
+                footprint += self.compute_footprint(child)
         else:
             # when bottom ingredient match ingredient with product in db
             match_ingredient = self.match_ingredient(ingredient_obj.name)
             footprint += match_ingredient.cfp
 
-        return footprint
-
-
-if __name__ == "__main__":
-    pizza = Ingredient("pizza", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
-                                "(farine 90%, eau 10%)", percent=100,
-                       children=[Ingredient("garniture", "(fromage 50%, tomate 12%, fraise 8%)", percent=65.7,
-                                            children=[Ingredient("fromage", "fromage 50%", percent=50),
-                                                      Ingredient("tomate", "tomate 12%", percent=12),
-                                                      Ingredient("fraise", "fraise 8%", percent=8)]),
-                                 Ingredient("pate", "(farine 90%, eau 10%)", percent=44.3,
-                                            children=[Ingredient("farine,", "farine 90%,", percent=90),
-                                                      Ingredient("eau,", "eau 10%,", percent=10)])])
-    pizza2 = Ingredient("fromage", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
-                                "(farine 90%, eau 10%)", percent=100)
-    matching = Matching()
-
-    footprint = matching.compute_footprint(pizza)
-    print("footprint", footprint)
+        return footprint * ingredient_obj.percent / 100
