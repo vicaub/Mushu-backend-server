@@ -43,7 +43,7 @@ class Matching:
         :return: Best Product object match with ingredient_name
         """
         best_score, best_product = self.browse_database(ingredient_name, self.database)
-        print("ingredient", ingredient_name, "score", best_score, "product", best_product)
+        # print("ingredient", ingredient_name, "score", best_score, "product", best_product)
 
         return best_product
 
