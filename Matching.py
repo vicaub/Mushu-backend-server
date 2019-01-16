@@ -1,7 +1,7 @@
 from Ingredient import Ingredient
 from Product import Product
 from categories import fruits, legumes, poissons, produits_laitiers, viandes
-from fuzzywuzzy import process
+from fuzzywuzzy import process as fuzzy
 
 
 class Matching:
@@ -27,7 +27,7 @@ class Matching:
         :return: tuple object (best matching score, product object that correspond to best match)
         """
         if product.children and len(product.children) > 0:
-            best_score, best_product = process.extractOne(ingredient_name, product.convert_to_dict())[1:3]
+            best_score, best_product = fuzzy.extractOne(ingredient_name, product.convert_to_dict())[1:3]
             for child in product.children:
                 child_best_score, child_best_product = self.browse_database(ingredient_name, child)
                 if child_best_score > best_score:
@@ -43,7 +43,7 @@ class Matching:
         :return: Best Product object match with ingredient_name
         """
         best_score, best_product = self.browse_database(ingredient_name, self.database)
-        print("ingredient", ingredient_name, "score", best_score, "product", best_product)
+        # print("ingredient", ingredient_name, "score", best_score, "product", best_product)
 
         return best_product
 
