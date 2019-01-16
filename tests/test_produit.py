@@ -1,4 +1,7 @@
 from Product import Product
+import unittest
+
+from categories import produits_laitiers, poissons
 
 legume1 = Product("courgette", None)
 legume2 = Product("poivron", 1.3)
@@ -26,5 +29,18 @@ import categories.viandes as viandes
 
 var = viandes.viandes
 
-print(viandes.viandes.cfp)
-print(viandes.lapin2.cfp)
+
+class TestMatching(unittest.TestCase):
+
+    def test_get_cfp(self):
+        fromage_product = produits_laitiers.produits_laitiers.children[0].children[3]
+
+        self.assertEqual(fromage_product.cfp, 5.44)
+
+        truite_product = poissons.poissons.children[1]
+
+        self.assertEqual(truite_product.cfp, 4.2)
+
+if __name__ == "__main__":
+    unittest.main()
+

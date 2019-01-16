@@ -12,9 +12,8 @@ class Ingredient:
         self.percent = percent
         self.children = children
         self.ingredient_string = ingredient_string
-
-        # self.parse_string(ingredient_string)
-        # self.add_children(split_string)
+        if not self.children:
+            self.parse_string()
 
     def __repr__(self):
         return "name: " + self.name + ", percent: " + str(self.percent) + ", children: " + str(self.children)
@@ -37,18 +36,25 @@ class Ingredient:
                     i_open_bracket = stack.pop()
                     if len(stack) == 0:
                         # cela signifie qu'on a matché toutes les parenthèses ouvrantes précédentes
-                        ingr_name = self.ingredient_string[start:i_open_bracket]
+                        if self.ingredient_string[i_open_bracket - 1] == " ":
+                            ingr_name = self.ingredient_string[start:i_open_bracket - 1]
+                        else:
+                            ingr_name = self.ingredient_string[start:i_open_bracket]
+
                         ingr_substring = self.ingredient_string[i_open_bracket + 1:i]
-                        print(ingr_substring)
                         self.children.append(Ingredient(ingr_name, ingr_substring))
                         start = None
                 elif self.ingredient_string[i] == ',':
-                    if len(stack) == 0:
-                        name = self.ingredient_string[start:i]
-                        self.children.append(Ingredient(name, None))
-                        start = None
+                    if not self.ingredient_string[i+1].isdigit():
+                        if len(stack) == 0:
+                            name = self.ingredient_string[start:i]
+                            self.children.append(Ingredient(name, None))
+                            start = None
                 elif i == len(self.ingredient_string) - 1:
-                    name = self.ingredient_string[start:i + 1]
+                    if self.ingredient_string[i] == ".":
+                        name = self.ingredient_string[start:i]
+                    else:
+                        name = self.ingredient_string[start:i + 1]
                     self.children.append(Ingredient(name, None))
 
     def add_children(self, split_string):
@@ -103,27 +109,31 @@ class Ingredient:
     def __repr__(self):
         return "name: " + self.name + ", percent: " + str(self.percent) + ", " + str(self.children)
 
-# Camille
-if __name__ == '__main__':
-    pizza = Ingredient("pizza ", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
-                                 "(farine 90%, eau 10%)", percent=100,
-                       children=[Ingredient("garniture 65,7%", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%)",
-                                            children=[Ingredient("fromage 50%", "fromage 50%"),
-                                                      Ingredient("tomate 12%", "tomate 12%"),
-                                                      Ingredient("fraise 8,3%", "fraise 8%")]),
-                                 Ingredient("pate 44,3%", "(farine 90%, eau 10%)",
-                                            children=[Ingredient("farine 90%,", "farine 90%,"),
-                                                      Ingredient("eau 10%,", "eau 10%,")])])
-    print(pizza)
-    pizza.update_percent()
-    print(pizza)
+# # Camille
+# # if __name__ == '__main__':
+# #     pizza = Ingredient("pizza ", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
+# #                                  "(farine 90%, eau 10%)", percent=100,
+# #                        children=[Ingredient("garniture 65,7%", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%)",
+# #                                             children=[Ingredient("fromage 50%", "fromage 50%"),
+# #                                                       Ingredient("tomate 12%", "tomate 12%"),
+# #                                                       Ingredient("fraise 8,3%", "fraise 8%")]),
+# #                                  Ingredient("pate 44,3%", "(farine 90%, eau 10%)",
+# #                                             children=[Ingredient("farine 90%,", "farine 90%,"),
+# #                                                       Ingredient("eau 10%,", "eau 10%,")])])
+# #     print(pizza)
+# #     pizza.update_percent()
+# #     print(pizza)
 
 # Sophie
 if __name__ == "__main__":
-    test = Ingredient("test",
+    test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
+    test2 = Ingredient("Gratin de pomme de terre, oignon, comté surgelé - Picard - 220 g", "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
+    test3 = Ingredient("test",
                       "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
-    test.parse_string()
 
     print(test)
+    print(test2)
+    print(test3)
+    print(len(test3.children))
 
     # test.display_ingredients()

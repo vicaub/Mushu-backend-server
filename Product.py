@@ -43,14 +43,12 @@ class Product:
         """
         when cfp is None get average children cfp or parent cfp
         """
-        cfp = None
+        cfp = 0
         if self.children:
             # first get children cfp
             i = 0
             for child in self.children:
                 if child.__cfp:
-                    if i == 0:
-                        cfp = 0
                     cfp += child.__cfp
                     i += 1
             if i > 0:
@@ -66,7 +64,7 @@ class Product:
     @property
     def cfp(self):
         """
-        getter for cfp attribute
+        getter for cfp attributen
         """
         cfp = self.__cfp
         if not cfp:
@@ -78,7 +76,7 @@ class Product:
         """
         Convienient format to print Product objects
         """
-        product_print = self.name + ", cfp: " + str(self.__cfp)
+        product_print = self.name + ", cfp: " + str(self.cfp)
         # if self.children:
         #     product_print += ", " + str(self.children)
         return product_print
