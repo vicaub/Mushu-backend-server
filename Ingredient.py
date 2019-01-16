@@ -124,18 +124,23 @@ class Ingredient:
                         prev_percent_child = i
                         next_percent_child = None
 
-            for middle_indexes in middle_groups:
-                self.assign_percent_middle(middle_indexes[0],
-                                           middle_indexes[1],
-                                           self.children[middle_indexes[0] - 1].percent,
-                                           self.children[middle_indexes[1] + 1].percent)
-            if end_group > 0:
-                self.assign_percent_end(end_group, self.children[end_group - 1].percent)
-            else:
+            if end_group == 0:
                 # there is no percentage in the ingredient string
                 self.assign_percent_end(end_group, 100)
-            if begin_group < len(self.children) - 1:
-                self.assign_percent_begin(begin_group, self.children[begin_group + 1].percent)
+            else:
+                for middle_indexes in middle_groups:
+                    self.assign_percent_middle(middle_indexes[0],
+                                               middle_indexes[1],
+                                               self.children[middle_indexes[0] - 1].percent,
+                                               self.children[middle_indexes[1] + 1].percent)
+                if end_group < len(self.children):
+                    self.assign_percent_end(end_group, self.children[end_group - 1].percent)
+
+                if len(self.children) - 1 > begin_group > -1:
+                    self.assign_percent_begin(begin_group, self.children[begin_group + 1].percent)
+
+            for child in self.children:
+                child.assign_children_percentage()
 
             # for testing purpose
             return begin_group, middle_groups, end_group
