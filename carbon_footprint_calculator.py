@@ -17,6 +17,8 @@ def get_product_from_api(barcode):
 
 def get_cfp_from_barcode(barcode):
     off_response = get_product_from_api(barcode)
+    product_name = off_response["product"]["product_name"]
+    print(product_name)
     try:
         # CFP already in API response
         cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
@@ -25,13 +27,9 @@ def get_cfp_from_barcode(barcode):
     except:
         # We need to compute manually CFP
         ingredient_string = off_response["product"]["ingredients_text"]
-        print(ingredient_string)
 
-        ingredient = Ingredient(barcode, ingredient_string, percent=100)
+        ingredient = Ingredient(product_name, ingredient_string, percent=100)
         ingredient.update_percent()
-
-        print(ingredient)
-        # TODO: complete percentage function...
 
         matching = Matching()
 
@@ -44,8 +42,7 @@ def get_cfp_from_barcode(barcode):
 if __name__ == "__main__":
     test_barcodes = ["3700214611548", "3103220009574", "3250391587285", "3017800022016", "9002490100070", "3588570001995"]
 
-    # for barcode in test_barcodes:
-    #     get_cfp_from_barcode(barcode)
+    for barcode in test_barcodes:
+        print(get_cfp_from_barcode(barcode))
 
-    print(get_cfp_from_barcode(test_barcodes[1]))
 
