@@ -144,7 +144,33 @@ class Ingredient:
         """
         assigner les pourcentages sur le groupe tout devant
         """
-        pass
+        total_percent = 0
+        for child in self.children:
+            if child.percent:
+                total_percent += child.percent
+        print("total_percent", total_percent)
+
+        if float((100 - total_percent)/(j+1)) >= percent_right:
+            print("on est dans la situation facile")
+            if j == 0:
+                self.children[0].percent = 100 - total_percent
+
+            else:
+                percent_avg = (float((100 - total_percent)/(j+1)) + percent_right) / 2
+                self.children[j].percent = percent_avg
+                self.assign_percent_begin(j-1, percent_avg)
+        else:
+            delta = ((percent_right - float((100 - total_percent)/(j+1)))*(j+1))*2
+            print(delta)
+            l = len(self.children)
+            print("l: ", l)
+            for child in self.children:
+                if child.percent:
+                    child.percent -= delta / (l - j + 1)
+                    print("child.percent", child.percent)
+            self.assign_percent_begin(j, self.children[j+1].percent)
+
+
 
     def assign_percent_middle(self, i, j, percent_left, percent_right):
         """
@@ -271,10 +297,12 @@ if __name__ == "__main__":
     # print(test3)
     # print(len(test3.children))
     test = Ingredient("test",
-                      "fruit rouges 20%, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
-    first_i = 0
+                      "fruit rouges, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
+    first_i = 2
     last_i = 8
     test.children[first_i].percent = 20
     test.children[last_i].percent = 1
     test.assign_percent_middle(first_i + 1, last_i - 1, 20, 1)
     print(test)
+    test.assign_percent_begin(1,20)
+    print("test2", test)
