@@ -164,6 +164,29 @@ class TestIngredient(unittest.TestCase):
         self.assertAlmostEqual(test.children[1].percent, 33.33, places=2)
         self.assertAlmostEqual(test.children[2].percent, 1.09, places=2)
 
+    def test_assign_percent_begin(self):
+        test1 = Ingredient("test1", "fruit rouge , eau 60%, farine de blé 10%, épaississant 1%")
+        test2 = Ingredient("test2", "fruit rouge , eau, farine de blé, tomate 15%, épaississant 1%")
+        test3 = Ingredient("test3", "fruit rouge , eau, farine de blé 24%, tomate 18%, épaississant 14%, patate 1%")
+
+
+        test1.update_percent()
+        test2.update_percent()
+        test3.update_percent()
+        print(test3)
+
+        #test1.assign_percent_begin(0,60)
+        #test2.assign_percent_begin(2,15)
+        #test3.assign_percent_begin(1,40)
+
+        self.assertAlmostEqual(75.5,test1.children[0].percent, places = 1)
+        self.assertEqual(36.125, test2.children[0].percent)
+        self.assertEqual(26.375,test2.children[1].percent)
+        self.assertEqual(21.5, test2.children[2].percent)
+        self.assertAlmostEqual(test3.children[2].percent,22.5, places = 1)
+        self.assertAlmostEqual(test3.children[3].percent, 16.5, places = 1)
+        self.assertAlmostEqual(test3.children[0].percent,24.375,places = 1)
+        self.assertAlmostEqual(test3.children[1].percent,23.125, places = 1)
 
 if __name__ == '__main__':
     unittest.main()

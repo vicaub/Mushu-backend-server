@@ -148,10 +148,8 @@ class Ingredient:
         for child in self.children:
             if child.percent:
                 total_percent += child.percent
-        print("total_percent", total_percent)
 
         if float((100 - total_percent)/(j+1)) >= percent_right:
-            print("on est dans la situation facile")
             if j == 0:
                 self.children[0].percent = 100 - total_percent
 
@@ -160,15 +158,12 @@ class Ingredient:
                 self.children[j].percent = percent_avg
                 self.assign_percent_begin(j-1, percent_avg)
         else:
-            delta = ((percent_right - float((100 - total_percent)/(j+1)))*(j+1))*2
-            print(delta)
+            delta = ((percent_right - float((100 - total_percent)/(j+1)))*(j+1))*1.5
             l = len(self.children)
-            print("l: ", l)
             for child in self.children:
                 if child.percent:
-                    child.percent -= delta / (l - j + 1)
-                    print("child.percent", child.percent)
-            self.assign_percent_begin(j, self.children[j+1].percent)
+                    child.percent -= delta * (child.percent / total_percent)
+                self.assign_percent_begin(j, self.children[j+1].percent)
 
 
 
