@@ -146,6 +146,32 @@ class Ingredient:
 
     def get_percent_middle(self, i, j, percent_left, percent_right):
         """assigner les pourcentages sur un groupe au milieu"""
+        if j-i+1 > 0 and percent_left > percent_right:
+            # calcul de la moyenne
+            average = (percent_left + percent_right) / 2
+            # si j'ai un nombre impair de pourcentages à assigner
+            if (j-i+1) % 2 == 1:
+                # calcul de l'indice du milieu
+                i_middle = i + (j-i) // 2
+                # j'alloue le pourcentage à l'ingrédient du milieu
+                self.children[i_middle].percent = average
+                #j'applique récursivement si ce que je viens de traiter avait plus d'un élément
+                if j-i+1 > 1:
+                    self.get_percent_middle(i, i_middle-1, percent_left, average)
+                    self.get_percent_middle(i_middle+1, j, average, percent_right)
+
+            # si j'ai un nombre pair de pourcentages à assigner:
+            else:
+                # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
+                if j-i+1 == 2:
+                    average_left = (percent_left + average) / 2
+                    average_right = (average + percent_right) / 2
+                    self.children[i].percent = average_left
+                    self.children[j].percent = average_right
+                # sinon je fais un appel récursif
+                else:
+                    self.get_percent_middle(i, i+(j-i)//2, percent_left, average)
+                    self.get_percent_middle(i+(j-i)//2 + 1, j, average, percent_right)
         pass
 
     def assign_percent_end(self, i, percent_left):
@@ -160,7 +186,7 @@ class Ingredient:
         stop_index = None
         for l in range (i, len(self.children)):
             if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower())\
-                    or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] >= 90:
+                    or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 90:
             # rajouter la fonction de victor qui utilise la stop_liste_to_put
                 self.children[l].percent = float(percent_left / 2)
                 percent_left = self.children[l].percent
@@ -219,14 +245,19 @@ class Ingredient:
 
 # Sophie
 if __name__ == "__main__":
-    test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
-    test2 = Ingredient("Gratin de pomme de terre, oignon, comté surgelé - Picard - 220 g", "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
-    test3 = Ingredient("test",
-                      "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
-
+    #test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
+    # test2 = Ingredient("Gratin de pomme de terre, oignon, comté surgelé - Picard - 220 g", "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
+    # test3 = Ingredient("test",
+    #                   "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
+    #
+    # print(test)
+    # print(test2)
+    # print(test3)
+    # print(len(test3.children))
+    test = Ingredient("test", "fruit rouges 20%, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
+    first_i = 0
+    last_i = 8
+    test.children[first_i].percent = 20
+    test.children[last_i].percent = 1
+    test.get_percent_middle(first_i+1,last_i-1,20,1)
     print(test)
-    print(test2)
-    print(test3)
-    print(len(test3.children))
-
-    # test.display_ingredients()

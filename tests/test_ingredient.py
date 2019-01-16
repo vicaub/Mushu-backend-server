@@ -91,6 +91,70 @@ class TestIngredient(unittest.TestCase):
         self.assertEqual(2.5, test1.children[4].percent)
         self.assertEqual(len(test1.children), 5)
 
+    def test_middle_percent(self):
+        test = Ingredient("test", "fruit rouge 60%, eau, épaississant 1%")
+        i_start = 0
+        i_final = 2
+        test.children[i_start].percent = 60
+        test.children[i_final].percent = 1
+        test.get_percent_middle(i_start+1, i_final-1, test.children[i_start].percent, test.children[i_final].percent)
+        self.assertEqual(30.5, test.children[1].percent)
+
+        test2 = Ingredient("test", "fruit rouge 60%, épaississant 1%")
+        i_start = 0
+        i_final = 1
+        test2.children[i_start].percent = 60
+        test2.children[i_final].percent = 1
+        test2.get_percent_middle(i_start + 1, i_final - 1, test2.children[i_start].percent,
+                                test2.children[i_final].percent)
+        self.assertEqual(60, test2.children[0].percent)
+        self.assertEqual( 1, test2.children[1].percent)
+
+        test3 = Ingredient("test", "fruit rouge 60%, eau, farine de blé, épaississant 1%")
+        i_start = 0
+        i_final = 3
+        test3.children[i_start].percent = 60
+        test3.children[i_final].percent = 1
+        test3.get_percent_middle(i_start + 1, i_final - 1, test3.children[i_start].percent,
+                                test3.children[i_final].percent)
+        self.assertEqual(45.25, test3.children[1].percent)
+        self.assertEqual(15.75, test3.children[2].percent)
+
+        test4 = Ingredient("test", "fruit rouge 60%, eau, farine de blé, lait, épaississant 1%")
+        i_start = 0
+        i_final = 4
+        test4.children[i_start].percent = 60
+        test4.children[i_final].percent = 1
+        test4.get_percent_middle(i_start + 1, i_final - 1, test4.children[i_start].percent,
+                                 test4.children[i_final].percent)
+        self.assertEqual(45.25, test4.children[1].percent)
+        self.assertEqual( 30.5, test4.children[2].percent)
+        self.assertEqual(15.75, test4.children[3].percent)
+
+        test5 = Ingredient("test", "fruit rouge 60%, eau, farine de blé, lait, framboise, épaississant 1%")
+        i_start = 0
+        i_final = 5
+        test5.children[i_start].percent = 60
+        test5.children[i_final].percent = 1
+        test5.get_percent_middle(i_start + 1, i_final - 1, test5.children[i_start].percent,
+                                 test5.children[i_final].percent)
+        self.assertEqual(52.625, test5.children[1].percent)
+        self.assertEqual(37.875, test5.children[2].percent)
+        self.assertEqual(23.125, test5.children[3].percent)
+        self.assertEqual( 8.375, test5.children[4].percent)
+
+        test6 = Ingredient("test", "fruit rouge 60%, eau, farine de blé, lait, framboise, groseille, épaississant 1%")
+        i_start = 0
+        i_final = 6
+        test6.children[i_start].percent = 60
+        test6.children[i_final].percent = 1
+        test6.get_percent_middle(i_start + 1, i_final - 1, test6.children[i_start].percent,
+                                 test6.children[i_final].percent)
+        self.assertEqual(52.625, test6.children[1].percent)
+        self.assertEqual(37.875, test6.children[2].percent)
+        self.assertEqual(  30.5, test6.children[3].percent)
+        self.assertEqual(23.125, test6.children[4].percent)
+        self.assertEqual( 8.375, test6.children[5].percent)
 
 
 if __name__ == '__main__':
