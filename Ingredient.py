@@ -18,8 +18,11 @@ class Ingredient:
         if not self.children:
             self.parse_string()
 
-
     def parse_string(self):
+        """
+        analyse the ingredient string attribute and generate children according to it
+        parenthesis are considered as children delimiters
+        """
         if self.ingredient_string:
             # TODO - Sophie owner
             stack = []
@@ -46,7 +49,7 @@ class Ingredient:
                         self.children.append(Ingredient(ingr_name, ingr_substring))
                         start = None
                 elif self.ingredient_string[i] == ',':
-                    if not self.ingredient_string[i+1].isdigit():
+                    if not self.ingredient_string[i + 1].isdigit():
                         if len(stack) == 0:
                             # si je ne suis pas au milieu de parenthèses
                             # on ajoute un ingrédient dans les enfants
@@ -60,12 +63,11 @@ class Ingredient:
                         name = self.ingredient_string[start:i + 1]
                     self.children.append(Ingredient(name, None))
 
-    def add_children(self, split_string):
-
-        for child in split_string:
-            self.children.append(Ingredient("key", "string"))
-
-        return True
+    # def add_children(self, split_string):
+    #     for child in split_string:
+    #         self.children.append(Ingredient("key", "string"))
+    #
+    #     return True
 
     def update_percent(self):
         # if il y a un pourcentage et un if il y a pas de pourcentage
@@ -75,9 +77,9 @@ class Ingredient:
         if not self.percent:
             self.percent = 100
 
-
         self.assign_children_percentage()
 
+        self.rectify_total_percent()
 
     def assign_children_percentage(self):
         """
@@ -123,60 +125,62 @@ class Ingredient:
                         next_percent_child = None
 
             for middle_indexes in middle_groups:
-                self.get_percent_middle(middle_indexes[0],
-                                        middle_indexes[1],
-                                        self.children[middle_indexes[0] - 1].percent,
-                                        self.children[middle_indexes[1] + 1].percent)
+                self.assign_percent_middle(middle_indexes[0],
+                                           middle_indexes[1],
+                                           self.children[middle_indexes[0] - 1].percent,
+                                           self.children[middle_indexes[1] + 1].percent)
             if end_group > 0:
                 self.assign_percent_end(end_group, self.children[end_group - 1].percent)
+            else:
+                # there is no percentage in the ingredient string
+                self.assign_percent_end(end_group, 100)
             if begin_group < len(self.children) - 1:
-                self.get_percent_begin(begin_group, self.children[begin_group + 1].percent)
+                self.assign_percent_begin(begin_group, self.children[begin_group + 1].percent)
 
             # for testing purpose
             return begin_group, middle_groups, end_group
 
-        else:
-            # no child to assign percentage
-            pass
-
-
-    def get_percent_begin(self, j, percent_right):
-        """assigner les pourcentages sur le groupe tout devant"""
+    def assign_percent_begin(self, j, percent_right):
+        """
+        assigner les pourcentages sur le groupe tout devant
+        """
         pass
 
-    def get_percent_middle(self, i, j, percent_left, percent_right):
-        """assigner les pourcentages sur un groupe au milieu"""
-        if j-i+1 > 0 and percent_left > percent_right:
+    def assign_percent_middle(self, i, j, percent_left, percent_right):
+        """
+        assigner les pourcentages sur un groupe au milieu
+        """
+        if j - i + 1 > 0 and percent_left > percent_right:
             # calcul de la moyenne
             average = (percent_left + percent_right) / 2
             # si j'ai un nombre impair de pourcentages à assigner
-            if (j-i+1) % 2 == 1:
+            if (j - i + 1) % 2 == 1:
                 # calcul de l'indice du milieu
-                i_middle = i + (j-i) // 2
+                i_middle = i + (j - i) // 2
                 # j'alloue le pourcentage à l'ingrédient du milieu
                 self.children[i_middle].percent = average
-                #j'applique récursivement si ce que je viens de traiter avait plus d'un élément
-                if j-i+1 > 1:
-                    self.get_percent_middle(i, i_middle-1, percent_left, average)
-                    self.get_percent_middle(i_middle+1, j, average, percent_right)
+                # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
+                if j - i + 1 > 1:
+                    self.assign_percent_middle(i, i_middle - 1, percent_left, average)
+                    self.assign_percent_middle(i_middle + 1, j, average, percent_right)
 
             # si j'ai un nombre pair de pourcentages à assigner:
             else:
                 # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
-                if j-i+1 == 2:
+                if j - i + 1 == 2:
                     average_left = (percent_left + average) / 2
                     average_right = (average + percent_right) / 2
                     self.children[i].percent = average_left
                     self.children[j].percent = average_right
                 # sinon je fais un appel récursif
                 else:
-                    self.get_percent_middle(i, i+(j-i)//2, percent_left, average)
-                    self.get_percent_middle(i+(j-i)//2 + 1, j, average, percent_right)
-        pass
+                    self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
+                    self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
 
     def assign_percent_end(self, i, percent_left):
-        """Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)"""
-        #TODO: stop liste
+        """
+        Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
+        """
         stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
                              "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arome",
@@ -184,23 +188,34 @@ class Ingredient:
                              "édulcorant"]
 
         stop_index = None
-        for l in range (i, len(self.children)):
-            if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower())\
+        for l in range(i, len(self.children)):
+            if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) \
                     or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 90:
-            # rajouter la fonction de victor qui utilise la stop_liste_to_put
+                # rajouter la fonction de victor qui utilise la stop_liste_to_put
                 self.children[l].percent = float(percent_left / 2)
                 percent_left = self.children[l].percent
-                print("nom: ",self.children[l].percent ,"pourcentage assigné",percent_left)
+                #print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
             else:
                 stop_index = l
                 break
         if stop_index:
-            print("nous avous supprimons les éléments suivants: ",self.children[stop_index:])
+            #print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
-            print("les enfants restants sont: ", self.children)
+            #print("les enfants restants sont: ", self.children)
 
-    def check_percent(self):
-        """check que la somme de tous les pourcentages fassent bien 100% """
+    def rectify_total_percent(self):
+        """
+        check que la somme de tous les pourcentages fassent bien 100%
+        """
+        total_percent = 0
+        for child in self.children:
+            total_percent += child.percent
+        if total_percent != 100:
+            for child in self.children:
+                child.percent /= total_percent / 100
+
+        for child in self.children:
+            child.rectify_total_percent()
 
     def assign_percent_from_name(self):
         """
@@ -228,6 +243,7 @@ class Ingredient:
 
         return "name: " + self.name + percent_string + children_string
 
+
 # # Camille
 # # if __name__ == '__main__':
 # #     pizza = Ingredient("pizza ", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
@@ -245,7 +261,7 @@ class Ingredient:
 
 # Sophie
 if __name__ == "__main__":
-    #test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
+    # test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
     # test2 = Ingredient("Gratin de pomme de terre, oignon, comté surgelé - Picard - 220 g", "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
     # test3 = Ingredient("test",
     #                   "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
@@ -254,10 +270,11 @@ if __name__ == "__main__":
     # print(test2)
     # print(test3)
     # print(len(test3.children))
-    test = Ingredient("test", "fruit rouges 20%, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
+    test = Ingredient("test",
+                      "fruit rouges 20%, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
     first_i = 0
     last_i = 8
     test.children[first_i].percent = 20
     test.children[last_i].percent = 1
-    test.get_percent_middle(first_i+1,last_i-1,20,1)
+    test.assign_percent_middle(first_i + 1, last_i - 1, 20, 1)
     print(test)
