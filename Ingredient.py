@@ -65,46 +65,46 @@ class Ingredient:
         return True
 
     def update_percent(self):
-        # TODO - Camille owner
         # if il y a un pourcentage et un if il y a pas de pourcentage
-        if not self.percent:
-            if Ingredient.expression_compilee.search(self.name) is not None:
-                self.percent_from_name()
-            else:
-                self.percent_from_nothing()
-        if self.children and len(self.children) > 0:
-            # pass
-            for child in self.children:
-                child.update_percent()
+        self.percent_from_name()
 
-    def complete_percent_after(self):
-        # pour remplir les self.children qui n'ont pas de pourcentage en fonction des autres.
+        # ajout du percentage 100 pour top ingredient
+        if not self.percent:
+            self.percent = 100
+
+
+        self.get_children_percentage()
+
+
+    def get_children_percentage(self):
+        if len(self.children) > 0:
+            pass
+
+    def get_percent_begin(self, j, percent_right):
         pass
 
-    def percent_from_nothing(self):
-        if len(self.children) >= 5:
-            self.children[0].percent = 40
-            self.children[1].percent = 20
-            self.children[2].percent = 20
-            self.children[3].percent = 10
-            self.children[4].percent = 10
-            for i in range(5, len(self.children)):
-                self.children[i].percent = 0
-        elif len(self.children) >= 2:
-            self.children[0].percent = 60
-            self.children[1].percent = 40
-            for i in range(2, len(self.children)):
-                self.children[i].percent = 0
-        elif len(self.children) > 0:
-            self.children[0].percent = 80
+    def get_percent_middle(self, i, j, percent_left, percent_right):
+        pass
+
+    def get_percent_end(self, i, percent_left):
+        pass
 
     def percent_from_name(self):
-        regex = Ingredient.expression_compilee.search(self.name)
-        index_to_delete = int(regex[0].find('%'))  # renvoie une liste comprenant l'element cherché
-        resultat = regex[0][0:index_to_delete]  # on supprime le sigle pourcentage
-        resultat = float(resultat.replace(",", "."))
-        self.name = self.name[:regex.start()].strip()
-        self.percent = resultat
+        """
+        Look for percent string in name and assign it to ingredient
+        Finally call same method to all children
+        :return:
+        """
+        if Ingredient.expression_compilee.search(self.name) is not None:
+            self.percent_from_name()
+            regex = Ingredient.expression_compilee.search(self.name)
+            index_to_delete = int(regex[0].find('%'))  # renvoie une liste comprenant l'element cherché
+            resultat = regex[0][0:index_to_delete]  # on supprime le sigle pourcentage
+            resultat = float(resultat.replace(",", "."))
+            self.name = self.name[:regex.start()].strip()
+            self.percent = resultat
+        for child in self.children:
+            child.percent_from_name()
 
     def __repr__(self):
         return "name: " + self.name + ", percent: " + str(self.percent) + ", " + str(self.children)
