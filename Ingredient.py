@@ -77,17 +77,24 @@ class Ingredient:
 
 
     def get_children_percentage(self):
+        """detection des groupes et appeler les fonctions correspondantes"""
         if len(self.children) > 0:
             pass
 
     def get_percent_begin(self, j, percent_right):
+        """assigner les pourcentages sur le groupe tout devant"""
         pass
 
     def get_percent_middle(self, i, j, percent_left, percent_right):
+        """assigner les pourcentages sur un groupe au milieu"""
         pass
 
     def get_percent_end(self, i, percent_left):
+        """Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)"""
         pass
+
+    def check_percent(self):
+        """check que la somme de tous les pourcentages fassent bien 100% """
 
     def percent_from_name(self):
         """
