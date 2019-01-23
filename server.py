@@ -1,11 +1,16 @@
-from flask import Flask, request, render_template
+from flask import Flask, request
+
+from carbon_footprint_calculator import get_cfp_from_barcode
 
 app = Flask(__name__)
 
 
 @app.route("/cfp")
 def get_cfp():
-    return "Hello World"
+    # TODO: check request query params
+    barcode = request.args.get('barcode')
+    result = get_cfp_from_barcode(barcode)
+    return result
 
 
 if __name__ == "__main__":

@@ -16,6 +16,8 @@ def get_product_from_api(barcode):
 
 
 def get_cfp_from_barcode(barcode):
+    # TODO: check if barcode is correct
+    # TODO: raise errors
     off_response = get_product_from_api(barcode)
     product_name = off_response["product"]["product_name"]
     print(product_name)
