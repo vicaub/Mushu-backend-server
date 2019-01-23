@@ -1,5 +1,4 @@
-from Ingredient import Ingredient
-from Product import Product
+from models.Product import Product
 from categories import fruits, legumes, poissons, produits_laitiers, viandes
 from fuzzywuzzy import process as fuzzy
 

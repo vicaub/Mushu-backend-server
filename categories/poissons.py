@@ -1,4 +1,4 @@
-from Product import Product
+from models.Product import Product
 
 poissons = Product("poisson", children=[
     Product("poisson", 3.49, [

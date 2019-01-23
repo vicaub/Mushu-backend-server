@@ -1,7 +1,7 @@
 import unittest
 
-from Ingredient import Ingredient
-from Matching import Matching
+from models.Ingredient import Ingredient
+from models.Matching import Matching
 from categories.produits_laitiers import produits_laitiers
 import categories.viandes as viandes
 

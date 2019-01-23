@@ -1,4 +1,4 @@
-from Product import Product
+from models.Product import Product
 
 produits_laitiers = Product("Produit Laitier et Oeuf", None,
                             [Product("Produit Laitier", None,

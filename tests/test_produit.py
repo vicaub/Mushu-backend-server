@@ -1,4 +1,4 @@
-from Product import Product
+from models.Product import Product
 import unittest
 
 from categories import produits_laitiers, poissons
