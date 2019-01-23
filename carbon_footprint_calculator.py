@@ -1,38 +1,50 @@
 import requests
 from pprint import pprint
 
-off_url = "https://ssl-api.openfoodfacts.org/api/v0/produit/"
+from Ingredient import Ingredient
+from Matching import Matching
+
+off_url = "https://fr.openfoodfacts.org/api/v0/produit/"
 
 
-def get_product_from_barcode(barcode):
+def get_product_from_api(barcode):
     request_url = off_url + barcode + ".json"
 
     response = requests.get(request_url).json()
 
+    return response
+
+
+def get_cfp_from_barcode(barcode):
+    # TODO: check if barcode is correct
+    # TODO: raise errors
+    off_response = get_product_from_api(barcode)
+    product_name = off_response["product"]["product_name"]
+    print(product_name)
     try:
-
-        cf_value = response["product"]["nutriments"]["carbon-footprint"]
-        cf_unit = response["product"]["nutriments"]["carbon-footprint_unit"]
-
+        # CFP already in API response
+        cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
+        cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
+        return cf_value, cf_unit
     except:
+        # We need to compute manually CFP
+        ingredient_string = off_response["product"]["ingredients_text"]
 
-        print(response["product"]["ingredients_text_with_allergens"])
-        return(response["product"]["ingredients_text_with_allergens"])
-        #print(response["product"]["categories"].split(","))
-        #print(response["product"]["ingredients"])
+        ingredient = Ingredient(product_name, ingredient_string, percent=100)
+        ingredient.update_percent()
 
-def get_aliment_from_str(str_aliment):
-    res = str_aliment.find('courgette')
-    print(res)
+        matching = Matching()
 
+        cfp = matching.compute_footprint(ingredient)
+
+        return cfp, "kg/kg"
 
 
 
 if __name__ == "__main__":
-    get_product_from_barcode("3700214611548")
-    get_product_from_barcode("3103220009574")
-    get_aliment_from_str(get_product_from_barcode("3083680659062")) # Modifier la fiche Courgettes cuisinées à la Provençale
+    test_barcodes = ["3700214611548", "3103220009574", "3250391587285", "3017800022016", "9002490100070", "3588570001995"]
 
-
+    for barcode in test_barcodes:
+        print(get_cfp_from_barcode(barcode))
 
 

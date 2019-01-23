@@ -45,15 +45,15 @@ class TestMatching(unittest.TestCase):
     def test_compute_footprint(self):
         matching = Matching()
 
-        chou_fleur_ingredient = Ingredient("chou-fleur", "chou-fleur", percent=100)
+        chou_fleur_ingredient = Ingredient("chou-fleur", None, percent=100)
 
         self.assertEqual(matching.compute_footprint(chou_fleur_ingredient), 0.5)
 
-        fromage_ingredient = Ingredient("fromage", "fromage", percent=100)
+        fromage_ingredient = Ingredient("fromage", None, percent=100)
 
         self.assertEqual(matching.compute_footprint(fromage_ingredient), 5.44)
 
-        fromage_ingredient = Ingredient("fromage", "fromage", percent=50)
+        fromage_ingredient = Ingredient("fromage", None, percent=50)
 
         self.assertEqual(matching.compute_footprint(fromage_ingredient), 5.44 / 2)
 
