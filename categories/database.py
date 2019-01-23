@@ -1,4 +1,4 @@
-from categories import fruits, legumes, poissons, produits_laitiers, viandes
+from categories import fruits, legumes, poissons, produits_laitiers, viandes, epicerie, boissons
 from models.Product import Product
 
 products = [
@@ -6,7 +6,9 @@ products = [
     legumes.legumes,
     poissons.poissons,
     produits_laitiers.produits_laitiers,
-    viandes.viandes
+    viandes.viandes,
+    epicerie.epicerie,
+    boissons.boissons
 ]
 
 database = Product("database", None, products)
