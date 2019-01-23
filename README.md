@@ -18,6 +18,8 @@ Then we match every individual ingredient with a product we know the footprint i
 
 Finally, by extracting existing percentages in the string and estimating the ones left we compute the total carbon footprint.
 
+Server deployed at IP address: 54.37.23.103/mushu/
+
 ### Database
 
 The database is located in ./categories folder. It contains a file for each top product category:
