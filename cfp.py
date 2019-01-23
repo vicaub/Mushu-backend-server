@@ -1,18 +1,15 @@
 import requests
-from pprint import pprint
-
-from Ingredient import Ingredient
-from Matching import Matching
+from models.Ingredient import Ingredient
+from models.Matching import Matching
 
 off_url = "https://fr.openfoodfacts.org/api/v0/produit/"
 
 
 def get_product_from_api(barcode):
-    request_url = off_url + barcode + ".json"
-
-    response = requests.get(request_url).json()
-
-    return response
+    try:
+        request_url = off_url + barcode + ".json"
+        response = requests.get(request_url).json()
+        return response
 
 
 def get_cfp_from_barcode(barcode):
