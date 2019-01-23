@@ -1,6 +1,7 @@
 # 2018 Mushu App Environnementale
 # Python backend
 
+<<<<<<< HEAD
 ## Description 
 
 Mushu App Environnementale project aim to compute an estimation of the carbon footprint of anyt food product.
@@ -35,13 +36,26 @@ Products in database are created with the Matching class and declare the sub pro
 
 You need Python 3 environment and libraries in requirements.txt
 
+
+You need python 3.6 installed and libraries located in requirements.txt file
+
+```
+sudo apt install python3
+```
+
+```
+sudo apt install python3-pip
+```
+
 ```
 pip3 install -r requirements.txt
 ```
 
 ## How to run
 
-Server not implemented yet
+```
+python3 server.py
+```
 
 ## Run tests
 
@@ -49,4 +63,3 @@ Tests are located in ./tests folder
 ```
 python3 -m unittest discover ./tests
 ```
-

@@ -150,32 +150,32 @@ class Ingredient:
         assigner les pourcentages sur le groupe tout devant
         """
         total_percent = 0
+        # compute total percent assigned
         for child in self.children:
             if child.percent:
                 total_percent += child.percent
-        print("total_percent", total_percent)
 
-        if float((100 - total_percent)/(j+1)) >= percent_right:
-            print("on est dans la situation facile")
+        if float((100 - total_percent) / (j + 1)) >= percent_right:
+            # we have enough percentage left to distribute to front ingredients
             if j == 0:
                 self.children[0].percent = 100 - total_percent
 
             else:
-                percent_avg = (float((100 - total_percent)/(j+1)) + percent_right) / 2
+                percent_avg = (float((100 - total_percent) / (j + 1)) + percent_right) / 2
                 self.children[j].percent = percent_avg
-                self.assign_percent_begin(j-1, percent_avg)
+                self.assign_percent_begin(j - 1, percent_avg)
         else:
-            delta = ((percent_right - float((100 - total_percent)/(j+1)))*(j+1))*2
-            print(delta)
-            l = len(self.children)
-            print("l: ", l)
-            for child in self.children:
-                if child.percent:
-                    child.percent -= delta / (l - j + 1)
-                    print("child.percent", child.percent)
-            self.assign_percent_begin(j, self.children[j+1].percent)
-
-
+            # we don't have enough percentage left
+            # There will be a extra amount of percentage that will be corrected by rectify_total_percent
+            # delta = ((percent_right - float((100 - total_percent)/(j+1)))*(j+1))*1.5
+            # l = len(self.children)
+            # for child in self.children:
+            # if child.percent:
+            #     child.percent -= delta * (child.percent / total_percent)
+            # self.assign_percent_begin(j, self.children[j+1].percent)
+            self.children[j].percent = percent_right
+            if j > 0:
+                self.assign_percent_begin(j - 1, percent_right)
 
     def assign_percent_middle(self, i, j, percent_left, percent_right):
         """
@@ -225,14 +225,14 @@ class Ingredient:
                 # rajouter la fonction de victor qui utilise la stop_liste_to_put
                 self.children[l].percent = float(percent_left / 2)
                 percent_left = self.children[l].percent
-                #print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+                # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
             else:
                 stop_index = l
                 break
         if stop_index:
-            #print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
+            # print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
-            #print("les enfants restants sont: ", self.children)
+            # print("les enfants restants sont: ", self.children)
 
     def rectify_total_percent(self):
         """
@@ -273,41 +273,3 @@ class Ingredient:
             children_string = ", " + str(self.children)
 
         return "name: " + self.name + percent_string + children_string
-
-
-# # Camille
-# # if __name__ == '__main__':
-# #     pizza = Ingredient("pizza ", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%), pate 44,3% "
-# #                                  "(farine 90%, eau 10%)", percent=100,
-# #                        children=[Ingredient("garniture 65,7%", "garniture 65,7% (fromage 50%, tomate 12%, fraise 8%)",
-# #                                             children=[Ingredient("fromage 50%", "fromage 50%"),
-# #                                                       Ingredient("tomate 12%", "tomate 12%"),
-# #                                                       Ingredient("fraise 8,3%", "fraise 8%")]),
-# #                                  Ingredient("pate 44,3%", "(farine 90%, eau 10%)",
-# #                                             children=[Ingredient("farine 90%,", "farine 90%,"),
-# #                                                       Ingredient("eau 10%,", "eau 10%,")])])
-# #     print(pizza)
-# #     pizza.update_percent()
-# #     print(pizza)
-
-# Sophie
-if __name__ == "__main__":
-    # test = Ingredient("Crumble aux fruits rouges - Picard - 170 g", "Garniture aux fruits rouges 67,1% (fruits rouges 60% (griotte, groseille, cassis, mûre, framboise), eau, sucre, fécule de manioc, épaississants (farine de graines de caroube, gomme de xanthane)), pâte à crumble 32,9% (farine de blé, beurre, sucre, chapelure (farine de blé, eau, dextrose de blé et/ou maïs, levure, huile de colza, sel, colorants (extrait de paprika et de curcuma), sirop de glucose de blé et/ou de maïs))")
-    # test2 = Ingredient("Gratin de pomme de terre, oignon, comté surgelé - Picard - 220 g", "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
-    # test3 = Ingredient("test",
-    #                   "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
-    #
-    # print(test)
-    # print(test2)
-    # print(test3)
-    # print(len(test3.children))
-    test = Ingredient("test",
-                      "fruit rouges, groseille, framboise, eau, fécule de manioc, farine de blé, lait, pâte, épaississant 1%")
-    first_i = 2
-    last_i = 8
-    test.children[first_i].percent = 20
-    test.children[last_i].percent = 1
-    test.assign_percent_middle(first_i + 1, last_i - 1, 20, 1)
-    print(test)
-    test.assign_percent_begin(1,20)
-    print("test2", test)
