@@ -1,22 +1,42 @@
-from flask import Flask, request, render_template
-
-from carbon_footprint_calculator import get_cfp_from_barcode
+from flask import Flask, request, render_template, jsonify
+from cfp import get_cfp, make_response
+from errors.flask_errors import ApplicationError
 
 app = Flask(__name__)
 
 
-@app.route("/cfp")
-def get_cfp():
-    # TODO: check request query params
-    barcode = request.args.get('barcode')
-    result = get_cfp_from_barcode(barcode)
-    return str(result)
+# Server error handling
+
+@app.errorhandler(ApplicationError)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    # note that we set the 404 status explicitly
+    """
+    Called when user call an undeclared route
+    """
     return render_template('404.html'), 404
+
+
+# Routes
+
+@app.route("/cfp")
+def process_barcode():
+    try:
+        barcode = request.args.get('barcode')
+        result = make_response(barcode)
+        return jsonify(result)
+    except Exception as e:
+        try:
+            message = e.message
+        except:
+            message = str(e)
+        raise ApplicationError(message, payload={"barcode": barcode})
+
 
 if __name__ == "__main__":
     app.run()
