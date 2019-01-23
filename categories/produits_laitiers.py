@@ -10,7 +10,7 @@ produits_laitiers = Product("Produit Laitier et Oeuf", None,
                                                      Product("Lait semi-écrémé pasteurisé", 1.20),
                                                      Product("Lait de coco", 4.12),
                                                      Product("Lait de soja", 2.15),
-                                                     Product("Lait d'amande", 0,90)
+                                                     Product("Lait d'amande", 0.90)
                                                  ]),
                                          Product("Beurre et Margarine", None,
                                                  [
