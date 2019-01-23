@@ -25,6 +25,9 @@ class TestMatching(unittest.TestCase):
         self.assertNotEqual(matching1.browse_database("fromage", database),
                             matching1.browse_database("viande", database))
 
+        score3, expected_match = matching1.browse_database("Produit soufflé à base de pomme de terre", database)
+        print(score3, expected_match)
+
     def test_match_ingredient(self):
         fromage_product = produits_laitiers.children[0].children[3]
         matching = Matching(fromage_product)

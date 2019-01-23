@@ -18,7 +18,8 @@ boissons = Product("Boissons", None,
                                       Product("Jus de fruit", 2.28)
                                       ]),
                              Product("Boissons gazeuzes", None,
-                                     [Product("Soda", 1.39)
+                                     [Product("Soda", 1.39),
+                                      Product("Eau gazeuse", 1.39),
                                       ]),
                              Product("Boissons alcoolisées", None,
                                      [Product("Alcool pur", 1.56),

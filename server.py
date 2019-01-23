@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 from cfp import get_cfp, make_response
+from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
 from errors.flask_errors import ApplicationError
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ def process_barcode():
         barcode = request.args.get('barcode')
         result = make_response(barcode)
         return jsonify(result)
-    except Exception as e:
+    except (APICallError, ProductNotFoundError, APIResponseError) as e:
         try:
             message = e.message
         except:
