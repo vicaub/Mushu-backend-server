@@ -10,7 +10,7 @@ def get_cfp():
     # TODO: check request query params
     barcode = request.args.get('barcode')
     result = get_cfp_from_barcode(barcode)
-    return result
+    return str(result)
 
 
 @app.errorhandler(404)

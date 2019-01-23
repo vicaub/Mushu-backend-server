@@ -1,7 +1,6 @@
 # 2018 Mushu App Environnementale
 # Python backend
 
-<<<<<<< HEAD
 ## Description 
 
 Mushu App Environnementale project aim to compute an estimation of the carbon footprint of anyt food product.
