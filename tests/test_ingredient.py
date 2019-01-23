@@ -183,10 +183,6 @@ class TestIngredient(unittest.TestCase):
         test2.update_percent()
         test3.update_percent()
 
-        # test1.assign_percent_begin(0,60)
-        # test2.assign_percent_begin(2,15)
-        # test3.assign_percent_begin(1,40)
-
         self.assertAlmostEqual(59.0, test1.children[0].percent, places=1)
         self.assertEqual(36.125, test2.children[0].percent)
         self.assertEqual(26.375, test2.children[1].percent)

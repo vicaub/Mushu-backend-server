@@ -49,4 +49,3 @@ Tests are located in ./tests folder
 ```
 python3 -m unittest discover ./tests
 ```
-
