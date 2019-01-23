@@ -1,47 +1,57 @@
+import traceback
+
 import requests
+
+from errors.cfp_errors import ProductNotFoundError, APICallError, APIResponseError
 from models.Ingredient import Ingredient
 from models.Matching import Matching
 
 off_url = "https://fr.openfoodfacts.org/api/v0/produit/"
 
 
-def get_product_from_api(barcode):
-    try:
-        request_url = off_url + barcode + ".json"
-        response = requests.get(request_url).json()
-        return response
+def openfoodfacts_api(barcode):
+    request_url = off_url + barcode + ".json"
+    response = requests.get(request_url).json()
+    return response
 
 
-def get_cfp_from_barcode(barcode):
-    # TODO: check if barcode is correct
-    # TODO: raise errors
-    off_response = get_product_from_api(barcode)
-    product_name = off_response["product"]["product_name"]
-    print(product_name)
+def get_cfp(off_response):
     try:
         # CFP already in API response
         cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
         cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
-        return cf_value, cf_unit
-    except:
+        return {"value": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
+    except KeyError:
         # We need to compute manually CFP
         ingredient_string = off_response["product"]["ingredients_text"]
-
-        ingredient = Ingredient(product_name, ingredient_string, percent=100)
+        ingredient = Ingredient(off_response["product"]["product_name"], ingredient_string, percent=100)
         ingredient.update_percent()
 
-        matching = Matching()
+        matching = Matching(ingredient)
+        cfp = matching.compute_footprint()
 
-        cfp = matching.compute_footprint(ingredient)
-
-        return cfp, "kg/kg"
-
+        return {"value": cfp, "unit": "kg/kg", "cfp_in_api": False, "ingredients": str(ingredient)}
 
 
-if __name__ == "__main__":
-    test_barcodes = ["3700214611548", "3103220009574", "3250391587285", "3017800022016", "9002490100070", "3588570001995"]
+def make_response(barcode):
+    response = {}
 
-    for barcode in test_barcodes:
-        print(get_cfp_from_barcode(barcode))
+    try:
+        off_response = openfoodfacts_api(barcode)
+    except Exception:
+        raise APICallError()
 
+    if off_response["status"] == 0:
+        raise ProductNotFoundError()
 
+    try:
+        response["name"] = off_response["product"]["product_name"]
+        response["quantity_value"] = off_response["product"]["product_quantity"]
+        response["quantity_string"] = off_response["product"]["quantity"]
+        response["image_url"] = off_response["product"]["image_url"]
+    except KeyError:
+        raise APIResponseError()
+
+    response = {**get_cfp(off_response), **response}
+
+    return response
