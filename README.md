@@ -54,9 +54,23 @@ pip3 install -r requirements.txt
 
 ## How to run
 
+### Locally
 ```
 python3 server.py
 ```
+
+### On remote server
+
+First create a pair of public/private ssh keys.
+
+Add your public ssh key to `~/.ssh/authorized_keys` in remote server.
+
+```
+ssh ubuntu@54.37.23.103 
+cd mushu-back
+```
+
+Finally you can run the server.
 
 ## Run tests
 
@@ -64,3 +78,5 @@ Tests are located in ./tests folder
 ```
 python3 -m unittest discover ./tests
 ```
+
+
