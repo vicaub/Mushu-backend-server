@@ -182,32 +182,37 @@ class Ingredient:
         """
         assigner les pourcentages sur un groupe au milieu
         """
-        if j - i + 1 > 0 and percent_left > percent_right:
-            # calcul de la moyenne
-            average = (percent_left + percent_right) / 2
-            # si j'ai un nombre impair de pourcentages à assigner
-            if (j - i + 1) % 2 == 1:
-                # calcul de l'indice du milieu
-                i_middle = i + (j - i) // 2
-                # j'alloue le pourcentage à l'ingrédient du milieu
-                self.children[i_middle].percent = average
-                # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
-                if j - i + 1 > 1:
-                    self.assign_percent_middle(i, i_middle - 1, percent_left, average)
-                    self.assign_percent_middle(i_middle + 1, j, average, percent_right)
+        if j - i + 1 > 0
+            if percent_left > percent_right:
+                # calcul de la moyenne
+                average = (percent_left + percent_right) / 2
+                # si j'ai un nombre impair de pourcentages à assigner
+                if (j - i + 1) % 2 == 1:
+                    # calcul de l'indice du milieu
+                    i_middle = i + (j - i) // 2
+                    # j'alloue le pourcentage à l'ingrédient du milieu
+                    self.children[i_middle].percent = average
+                    # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
+                    if j - i + 1 > 1:
+                        self.assign_percent_middle(i, i_middle - 1, percent_left, average)
+                        self.assign_percent_middle(i_middle + 1, j, average, percent_right)
 
-            # si j'ai un nombre pair de pourcentages à assigner:
-            else:
-                # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
-                if j - i + 1 == 2:
-                    average_left = (percent_left + average) / 2
-                    average_right = (average + percent_right) / 2
-                    self.children[i].percent = average_left
-                    self.children[j].percent = average_right
-                # sinon je fais un appel récursif
+                # si j'ai un nombre pair de pourcentages à assigner:
                 else:
-                    self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
-                    self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+                    # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
+                    if j - i + 1 == 2:
+                        average_left = (percent_left + average) / 2
+                        average_right = (average + percent_right) / 2
+                        self.children[i].percent = average_left
+                        self.children[j].percent = average_right
+                    # sinon je fais un appel récursif
+                    else:
+                        self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
+                        self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+            else:
+                # left percent < right percent il y a un probleme
+                for k in range(i, j + 1):
+                    self.children[k].percent = 0
 
     def assign_percent_end(self, i, percent_left):
         """
