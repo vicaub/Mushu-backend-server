@@ -11,9 +11,10 @@ class Ingredient:
     def __init__(self, name, ingredient_string, percent=None, children=None):
         if children is None:
             children = []
-        self.name = name
+        self.name = name.replace("_", "")
         self.percent = percent
         self.children = children
+        self.match = None
         self.ingredient_string = ingredient_string
         if not self.children:
             self.parse_string()
@@ -271,5 +272,8 @@ class Ingredient:
         children_string = ""
         if self.children:
             children_string = ", " + str(self.children)
+        match_string = ""
+        if self.match:
+            match_string = ", match: " + str(self.match)
 
-        return "name: " + self.name + percent_string + children_string
+        return "name: " + self.name + percent_string + match_string + children_string

@@ -1,4 +1,4 @@
-from Product import Product
+from models.Product import Product
 
 produits_laitiers = Product("Produit Laitier et Oeuf", None,
                             [Product("Produit Laitier", None,
@@ -7,7 +7,10 @@ produits_laitiers = Product("Produit Laitier et Oeuf", None,
                                          Product("Lait", None,
                                                  [
                                                      Product("Lait", 1.56),
-                                                     Product("Lait semi-écrémé pasteurisé", 1.20)
+                                                     Product("Lait semi-écrémé pasteurisé", 1.20),
+                                                     Product("Lait de coco", 4.12),
+                                                     Product("Lait de soja", 2.15),
+                                                     Product("Lait d'amande", 0.90)
                                                  ]),
                                          Product("Beurre et Margarine", None,
                                                  [
@@ -42,4 +45,4 @@ produits_laitiers = Product("Produit Laitier et Oeuf", None,
                                          Product("Oeuf catégorie 2 au sol", 2.32),
                                          Product("Oeuf catégorie 3 en cage", 1.76)
                                      ]),
-                             ]);
+                             ])

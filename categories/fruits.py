@@ -1,4 +1,4 @@
-from Product import Product
+from models.Product import Product
 
 fruits = Product("fruit", None,
                  [Product("Pomme", None,
@@ -18,10 +18,11 @@ fruits = Product("fruit", None,
                           ]),
                   Product("Fruit", None,
                           [
-                              Product("Fruit ou légume moyen de saison, produit localement", 0.3),
-                              Product('Fruit ou légume moyen importé par bateau et camion', 1.3),
-                              Product("Fruit ou légume moyen, hors saison produit sous serre chauffée", 2.2),
-                              Product("Fruit ou légume moyen , importé par avion (saison ou hors saison)", 21.9)
+                              # Product("Fruit ou légume moyen de saison, produit localement", 0.3),
+                              # Product('Fruit ou légume moyen importé par bateau et camion', 1.3),
+                              # Product("Fruit ou légume moyen, hors saison produit sous serre chauffée", 2.2),
+                              # Product("Fruit ou légume moyen , importé par avion (saison ou hors saison)", 21.9)
+                              Product("Fruit", 0.3),
                           ]),
                   Product("Melon", 0.3),
                   Product("citron", 0.5),
