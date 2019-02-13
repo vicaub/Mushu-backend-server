@@ -28,7 +28,8 @@ class Ingredient:
             # TODO - Sophie owner
             stack = []
             start = None
-
+            # on remplace les éventuels œ par oe
+            self.ingredient_string = self.ingredient_string.replace("œ", "oe")
             for i in range(len(self.ingredient_string)):
                 if type(start) != int:
                     if self.ingredient_string[i].isalpha():
