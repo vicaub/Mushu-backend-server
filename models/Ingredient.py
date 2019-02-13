@@ -182,7 +182,7 @@ class Ingredient:
         """
         assigner les pourcentages sur un groupe au milieu
         """
-        if j - i + 1 > 0
+        if j - i + 1 > 0:
             if percent_left > percent_right:
                 # calcul de la moyenne
                 average = (percent_left + percent_right) / 2
