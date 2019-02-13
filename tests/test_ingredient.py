@@ -84,10 +84,24 @@ class TestIngredient(unittest.TestCase):
         test1 = Ingredient("test",
                            "Farine de BLE 27%, sucre, huile de colza 10%, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
 
-        test1.assign_percent_end(3, 10.0)
+        test2 = Ingredient("test2",
+                           "Farine de blé 55 %, eau 10%, son de blé 6,7 %, huile de colza, sucre, acidifiant, levure (contient alcool) ,sel, arôme, gluten de blé,farine de seigle maltée, vinaigre, extrait d'acérola, arôme (contient alcool)")
+        test3 = Ingredient("test3",
+                           "Sucre 50%, sirop de glucose 15%, gélatine, e452, acide citrique,colorants : curcumine, carmins, carotènes végétaux" )
+        test4 = Ingredient("test3",
+                           "Sucre 50%, sirop de glucose 15%, gélatine, trace de lactose, acide citrique,colorants : curcumine, carmins, carotènes végétaux")
+
+        test1.assign_percent_end(3, 10)
+        test2.assign_percent_end(3, 28.3)
+        test3.assign_percent_end(2, 35)
+        test4.assign_percent_end(2, 35)
+
         self.assertEqual(5.0, test1.children[3].percent)
         self.assertEqual(2.5, test1.children[4].percent)
         self.assertEqual(len(test1.children), 5)
+        self.assertEqual(len(test2.children), 5)
+        self.assertEqual(len(test3.children), 3)
+        self.assertEqual(len(test4.children), 3)
 
     def test_middle_percent(self):
         test = Ingredient("test", "fruit rouge 60%, eau, épaississant 1%")
