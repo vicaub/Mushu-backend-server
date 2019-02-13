@@ -39,5 +39,11 @@ def process_barcode():
         raise ApplicationError(message, payload={"barcode": barcode})
 
 
+@app.route("/equivalent")
+def get_equivalent():
+    cfp = float(request.args.get('cfp'))
+    return "equivalent"
+
+
 if __name__ == "__main__":
     app.run(debug=True)
