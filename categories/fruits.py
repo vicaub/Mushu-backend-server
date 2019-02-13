@@ -46,8 +46,14 @@ fruits = Product("fruit", None,
                   Product("mandarine", 0.8),
                   Product("banane", 0.7),
                   Product("cerise", 0.7),
-                  Product("noix", 0.7),
-                  Product("Amande", 2.9),
+                  Product("Myrtille", None),
+                  Product("Fruits à coque", None,
+                          [
+                              Product("Amande", 2.9),
+                              Product("Noix", 0.7),
+                              Product("Cachuète", None),
+                              Product("Arachide", None)
+                          ]),
                   Product("mangue", None,
                           [
                               Product("mangue importée par bateau", 0.7),
