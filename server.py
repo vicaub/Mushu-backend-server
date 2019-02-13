@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, jsonify
-from cfp import get_cfp, make_response
+from cfp import make_response
 from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
 from errors.flask_errors import ApplicationError
 
@@ -40,4 +40,4 @@ def process_barcode():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
