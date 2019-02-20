@@ -67,7 +67,7 @@ Add your public ssh key to `~/.ssh/authorized_keys` in remote server.
 
 ```
 ssh ubuntu@54.37.23.103 
-cd mushu-back`
+cd mushu-back
 ```
 
 
