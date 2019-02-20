@@ -34,7 +34,7 @@ def get_cfp(off_response):
 
 
 def make_response(barcode):
-    response = {}
+    response = {"barcode": barcode}
 
     try:
         off_response = openfoodfacts_api(barcode)
