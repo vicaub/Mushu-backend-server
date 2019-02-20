@@ -28,7 +28,7 @@ def get_cfp(off_response):
         ingredient.update_percent()
 
         matching = Matching(ingredient)
-        cfp = matching.compute_footprint()
+        cfp = round(matching.compute_footprint(),2)
 
         return {"value": cfp, "unit": "kg/kg", "cfp_in_api": False, "ingredients": str(ingredient)}
 
@@ -46,6 +46,7 @@ def make_response(barcode):
 
     try:
         response["name"] = off_response["product"]["product_name"]
+        response["original_ingredients"] = off_response["product"]["ingredients_text"]
         response["quantity_value"] = off_response["product"]["product_quantity"]
         response["quantity_string"] = off_response["product"]["quantity"]
         response["image_url"] = off_response["product"]["image_url"]

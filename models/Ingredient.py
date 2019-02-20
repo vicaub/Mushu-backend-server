@@ -5,7 +5,7 @@ from fuzzywuzzy import process as fuzzy
 class Ingredient:
     expression = r"[0-9]+[ .,]?[0-9]*?[ .]?[%]"
     expression_compilee = re.compile(expression)
-    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])$"
+    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
     useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "de"]
 
@@ -183,56 +183,65 @@ class Ingredient:
         """
         assigner les pourcentages sur un groupe au milieu
         """
-        if j - i + 1 > 0 and percent_left > percent_right:
-            # calcul de la moyenne
-            average = (percent_left + percent_right) / 2
-            # si j'ai un nombre impair de pourcentages à assigner
-            if (j - i + 1) % 2 == 1:
-                # calcul de l'indice du milieu
-                i_middle = i + (j - i) // 2
-                # j'alloue le pourcentage à l'ingrédient du milieu
-                self.children[i_middle].percent = average
-                # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
-                if j - i + 1 > 1:
-                    self.assign_percent_middle(i, i_middle - 1, percent_left, average)
-                    self.assign_percent_middle(i_middle + 1, j, average, percent_right)
+        if j - i + 1 > 0:
+            if percent_left > percent_right:
+                # calcul de la moyenne
+                average = (percent_left + percent_right) / 2
+                # si j'ai un nombre impair de pourcentages à assigner
+                if (j - i + 1) % 2 == 1:
+                    # calcul de l'indice du milieu
+                    i_middle = i + (j - i) // 2
+                    # j'alloue le pourcentage à l'ingrédient du milieu
+                    self.children[i_middle].percent = average
+                    # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
+                    if j - i + 1 > 1:
+                        self.assign_percent_middle(i, i_middle - 1, percent_left, average)
+                        self.assign_percent_middle(i_middle + 1, j, average, percent_right)
 
-            # si j'ai un nombre pair de pourcentages à assigner:
-            else:
-                # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
-                if j - i + 1 == 2:
-                    average_left = (percent_left + average) / 2
-                    average_right = (average + percent_right) / 2
-                    self.children[i].percent = average_left
-                    self.children[j].percent = average_right
-                # sinon je fais un appel récursif
+                # si j'ai un nombre pair de pourcentages à assigner:
                 else:
-                    self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
-                    self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+                    # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
+                    if j - i + 1 == 2:
+                        average_left = (percent_left + average) / 2
+                        average_right = (average + percent_right) / 2
+                        self.children[i].percent = average_left
+                        self.children[j].percent = average_right
+                    # sinon je fais un appel récursif
+                    else:
+                        self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
+                        self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+            else:
+                # left percent < right percent il y a un probleme
+                for k in range(i, j + 1):
+                    self.children[k].percent = 0
 
     def assign_percent_end(self, i, percent_left):
         """
         Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
+        i est le premier ingrédient auquel on doit assigner un pourcentage
         """
         stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
-                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arome",
+                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arôme",
                              "arômes", "colorants", "colorant", "contient", "enzyme", "épaississant", "édulcorants",
-                             "édulcorant"]
+                             "édulcorant", "diphosphates", "sodium", "extrait"]
 
         stop_index = None
         for l in range(i, len(self.children)):
-            if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) \
-                    or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 90:
-                # rajouter la fonction de victor qui utilise la stop_liste_to_put
-                self.children[l].percent = float(percent_left / 2)
-                percent_left = self.children[l].percent
-                # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+            if fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 89:
+                if Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) is None:
+                    # rajouter la fonction de victor qui utilise la stop_liste_to_put
+                    self.children[l].percent = float(percent_left / 2)
+                    percent_left = self.children[l].percent
+                    # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+                else:
+                    stop_index = l
+                    break
             else:
                 stop_index = l
                 break
         if stop_index:
-            # print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
+            #print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
             # print("les enfants restants sont: ", self.children)
 
