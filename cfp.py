@@ -28,7 +28,7 @@ def get_cfp(off_response):
         ingredient.update_percent()
 
         matching = Matching(ingredient)
-        cfp = round(matching.compute_footprint(),2)
+        cfp = matching.compute_footprint()
 
         return {"value": cfp, "unit": "kg/kg", "cfp_in_api": False, "ingredients": str(ingredient)}
 
