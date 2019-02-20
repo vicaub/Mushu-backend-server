@@ -7,6 +7,7 @@ class Ingredient:
     expression_compilee = re.compile(expression)
     stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])$"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
+    useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "de"]
 
     def __init__(self, name, ingredient_string, percent=None, children=None):
         if children is None:
