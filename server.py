@@ -43,8 +43,8 @@ def process_barcode():
 @app.route("/equivalent")
 def get_equivalent():
     cfp = float(request.args.get('cfp'))
-    equivalent = get_equiv_carbone("tree", cfp)
-    return equivalent
+    equivalent = get_equiv_carbone(cfp)
+    return jsonify(equivalent)
 
 
 if __name__ == "__main__":
