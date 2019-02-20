@@ -5,7 +5,7 @@ from fuzzywuzzy import process as fuzzy
 class Ingredient:
     expression = r"[0-9]+[ .,]?[0-9]*?[ .]?[%]"
     expression_compilee = re.compile(expression)
-    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])$"
+    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
 
     def __init__(self, name, ingredient_string, percent=None, children=None):
@@ -212,26 +212,30 @@ class Ingredient:
     def assign_percent_end(self, i, percent_left):
         """
         Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
+        i est le premier ingrédient auquel on doit assigner un pourcentage
         """
         stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
-                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arome",
+                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arôme",
                              "arômes", "colorants", "colorant", "contient", "enzyme", "épaississant", "édulcorants",
-                             "édulcorant"]
+                             "édulcorant", "diphosphates", "sodium", "extrait"]
 
         stop_index = None
         for l in range(i, len(self.children)):
-            if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) \
-                    or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 90:
-                # rajouter la fonction de victor qui utilise la stop_liste_to_put
-                self.children[l].percent = float(percent_left / 2)
-                percent_left = self.children[l].percent
-                # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+            if fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 89:
+                if Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) is None:
+                    # rajouter la fonction de victor qui utilise la stop_liste_to_put
+                    self.children[l].percent = float(percent_left / 2)
+                    percent_left = self.children[l].percent
+                    # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+                else:
+                    stop_index = l
+                    break
             else:
                 stop_index = l
                 break
         if stop_index:
-            # print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
+            #print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
             # print("les enfants restants sont: ", self.children)
 
