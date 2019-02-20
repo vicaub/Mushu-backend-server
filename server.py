@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 from cfp import make_response
+from equivalent import get_equiv_carbone
 from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
 from errors.flask_errors import ApplicationError
 
@@ -42,7 +43,8 @@ def process_barcode():
 @app.route("/equivalent")
 def get_equivalent():
     cfp = float(request.args.get('cfp'))
-    return "equivalent"
+    equivalent = get_equiv_carbone("tree", cfp)
+    return equivalent
 
 
 if __name__ == "__main__":

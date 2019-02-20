@@ -277,3 +277,4 @@ class Ingredient:
             match_string = ", match: " + str(self.match)
 
         return "name: " + self.name + percent_string + match_string + children_string
+
