@@ -7,6 +7,7 @@ class Ingredient:
     expression_compilee = re.compile(expression)
     stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
+    useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "vegan", "de"]
 
     def __init__(self, name, ingredient_string, percent=None, children=None):
         if children is None:
@@ -18,6 +19,7 @@ class Ingredient:
         self.ingredient_string = ingredient_string
         if not self.children:
             self.parse_string()
+        self.remove_useless_words()
 
     def parse_string(self):
         """
@@ -69,7 +71,17 @@ class Ingredient:
     #         self.children.append(Ingredient("key", "string"))
     #
     #     return True
-
+    
+    def remove_useless_words(self):
+        temp = self.name.split(" ")
+        for word in temp:
+            if word in Ingredient.useless_words:
+                temp.remove(word)
+        self.name = " ".join(temp)
+        if self.children:
+            for i in range(len(self.children)):
+                self.children[i].remove_useless_words()
+    
     def update_percent(self):
         # if il y a un pourcentage et un if il y a pas de pourcentage
         self.assign_percent_from_name()
