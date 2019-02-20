@@ -2,7 +2,7 @@ from enum import Enum
 
 start = "Votre panier est équivalent à "
 
-# TODO: voir problème tree equiv et electricity equiv
+# TODO: voir problème tree equiv et electricity equiv (une ampouble basse conso fait du 100W max...)
 # TODO: calculer distance equiv en avion, train et voiture puis trouver un équivalent d'itinéraire
 # TODO: voir réponses formulaire
 
