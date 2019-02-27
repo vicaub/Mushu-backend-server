@@ -48,15 +48,18 @@ def make_response(barcode):
     try:
         response["name"] = off_response["product"]["product_name"]
         response["original_ingredients"] = off_response["product"]["ingredients_text"]
-        response["quantity_string"] = off_response["product"]["quantity"]
         response["image_url"] = off_response["product"]["image_url"]
-        dico = build_weight(off_response["product"]["quantity"])
+        quantity_string = off_response["product"]["quantity"]
+        dico = build_weight(quantity_string)
         response.update(dico)
 
     except KeyError:
         raise APIResponseError()
 
     response = {**get_cfp(off_response), **response}
+
+    dico_cfp = calcul_cfp(response["value"], response["weight"], response["weightUnit"])
+    response.update(dico_cfp)
 
     return response
 
@@ -76,12 +79,54 @@ def build_weight(quantity_string, dictionnaire = {}):
         raise ValueError("Il n'y a pas de chiffre indiquant la quantité")
     return dictionnaire
 
+def calcul_cfp(CFPdensity, weight, weightunit, dictionnaire = {}):
+    """Calcul de l'empreinte carbone correspondant à la bonne quantité de produit dans une unité pertinente"""
+    # Pour les unités de masses (kg, g, mg et celles de volumes appropriées)
+    if weightunit == "kg":
+        truecfp = float(weight)*float(CFPdensity)
+        if truecfp >= 1:
+            dictionnaire["TotalCFP"] = truecfp
+            dictionnaire["CFPUnit"] = "kg"
+        else:
+            dictionnaire["TotalCFP"] = truecfp * 1000
+            dictionnaire["CFPUnit"] = "g"
+    elif weightunit == "g" or weightunit == "l":
+        truecfp = float(weight) * float(CFPdensity) * 0.001
+        if truecfp >= 1:
+            dictionnaire["TotalCFP"] = truecfp
+            dictionnaire["CFPUnit"] = "kg"
+        else:
+            dictionnaire["TotalCFP"] = truecfp * 1000
+            dictionnaire["CFPUnit"] = "g"
+    elif weightunit == "mg" or weightunit == "ml":
+        truecfp = float(weight) * float(CFPdensity) * 0.000001
+        if truecfp >= 1:
+            dictionnaire["TotalCFP"] = truecfp
+            dictionnaire["CFPUnit"] = "kg"
+        else:
+            dictionnaire["TotalCFP"] = truecfp * 1000
+            dictionnaire["CFPUnit"] = "g"
+    # Pour les unités de volumes restantes(cl)
+    elif weightunit == "cl":
+        truecfp = float(weight) * float(CFPdensity) * 0.01
+        if truecfp >= 1:
+            dictionnaire["TotalCFP"] = truecfp
+            dictionnaire["CFPUnit"] = "kg"
+        else:
+            dictionnaire["TotalCFP"] = truecfp * 1000
+            dictionnaire["CFPUnit"] = "g"
+    return (dictionnaire)
+
 
 if __name__ == "__main__":
+    # test de make_response
     res = make_response(str(3229820795676))
     print(res)
-    res_2 = make_response(str(3033490306014 ))
+    res_2 = make_response(str(3033490306014))
     print(res_2)
     res_3 = make_response(str(3324498000746))
     print(res_3)
 
+    # test d'assignation de pourcentage
+    test = calcul_cfp(1.5,100,'g')
+    print(test)
