@@ -5,9 +5,9 @@ legumes = Product('Legume', None, [
         Product('sauce tomate', 2.9),
         Product('tomate fraiche hors saison', 2.2),
         Product("tomate fraîche saison", 0.3),
-        Product("tomate destinée à l'industrie", 0.5),
+        Product("tomate destinée l'industrie", 0.5),
         Product('tomate pelées', 1.4),
-        Product('pulpe de tomate', 1.4),
+        Product('pulpe tomate', 1.4),
         Product('tomate fraiche importée', 0.6)
     ]),
     Product('chou', None, [
@@ -17,8 +17,8 @@ legumes = Product('Legume', None, [
     Product('pois', None, [
         Product("pois d'hiver frais", 1.4),
         Product('pois surgelés', 0.8),
-        Product('pois en conserve', 0.7),
-        Product('pois de printemps frais', 0.5),
+        Product('pois conserve', 0.7),
+        Product('pois printemps frais', 0.5),
         Product('pois chiche', 0.77)
     ]),
     Product('aubergine', 0.9, [
@@ -26,7 +26,7 @@ legumes = Product('Legume', None, [
     ]),
     Product('asperge', None, [
         Product('asperge saison', 0.7),
-        Product('asperge en boite', 2)
+        Product('asperge boite', 2)
     ]),
     Product('haricot', None, [
         Product('haricot vert frais', 0.7),
