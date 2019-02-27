@@ -115,7 +115,10 @@ def make_tree_equiv(cfp):
 def make_money_equiv(cfp):
     ref_cfp = 0.024
     equiv = ref_cfp * cfp
-    return "il faudrait faire un don de " + str(round(equiv,2)) + "€ pour compenser l'empreinte carbone de votre panier"
+    if round(equiv,2) == 0:
+        return -1
+    else:
+        return "il faudrait faire un don de " + str(round(equiv,2)) + "€ pour compenser l'empreinte carbone de votre panier"
 
 def make__delta_avg_equiv(cfp):
     ref_cfp = 1420
@@ -134,13 +137,16 @@ def get_equiv_carbone(cfp_kg):
     json = dict()
 
     # travel
-    json["travel"] = make_travel_equiv(cfp_kg)
+    if make_travel_equiv(cfp_kg) != -1:
+        json["travel"] = make_travel_equiv(cfp_kg)
 
     # tree
-    json["tree"] = make_tree_equiv(cfp_kg)
+    if make_tree_equiv(cfp_kg) != -1:
+        json["tree"] = make_tree_equiv(cfp_kg)
 
     # money to compensate
-    json["money"] = make_money_equiv(cfp_kg)
+    if make_money_equiv(cfp_kg) != -1:
+        json["money"] = make_money_equiv(cfp_kg)
 
     # delta french average
     json["delta_avg"] = make__delta_avg_equiv(cfp_kg)
