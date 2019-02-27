@@ -35,7 +35,24 @@ travel_cfp = {0.8: ["TGV", "Paris-Lille"],
               94.7: ["voiture", "Paris-Bordeaux"],
               121.4: ["voiture", "Paris-Montpellier"],
               125.6: ["voiture", "Paris-Marseille"],
-              151.3: ["voiture", "Paris-Nice"] }
+              151.3: ["voiture", "Paris-Nice"]}
+
+# ajout des aller-retour dans la liste pour varier les équivalents
+travel_cfp_2 = {}
+for el in travel_cfp:
+    key = 2 * el
+    travel_cfp_2[key] = travel_cfp[el].copy()
+    # on ajoute 1 pour dire que c'est un trajet
+    travel_cfp[el].append(1)
+    # on ajoute 2 pour dire que c'est 2 trajets soit un aller-retour
+    travel_cfp_2[key].append(2)
+
+# fusion en un seul dictionnaire
+travel_cfp_final = {**travel_cfp, **travel_cfp_2}
+
+# on récupère les clefs du dictionnaire qui sont les empreintes carbonnes équivalentes
+travel_keys = list(travel_cfp_final.keys())
+travel_keys.sort()
 
 # food_cfp = {283: "Inde",
 #             640: "Chine",
@@ -61,27 +78,11 @@ def convert_days_to_date(nb_days):
     days = nb_days
     return [int(years), int(months), int(days)]
 
+
 def make_travel_equiv(cfp):
-    #ajout des aller-retour dans la liste pour varier les équivalents
-    travel_cfp_2 = {}
-    for el in travel_cfp:
-        key = 2*el
-        travel_cfp_2[key] = travel_cfp[el].copy()
-        #on ajoute 1 pour dire que c'est un trajet
-        travel_cfp[el].append(1)
-        #on ajoute 2 pour dire que c'est 2 trajets soit un aller-retour
-        travel_cfp_2[key].append(2)
-
-    #fusion en un seul dictionnaire
-    travel_cfp_final = {**travel_cfp, **travel_cfp_2}
-
-    #on récupère les clefs du dictionnaire qui sont les empreintes carbonnes équivalentes
-    ref_cfp = list(travel_cfp_final.keys())
-    ref_cfp.sort()
-
     close_cfp = 0
-    #on recherche l'empreinte carbone la plus proche de notre entrée cfp
-    for el in ref_cfp:
+    # on recherche l'empreinte carbone la plus proche de notre entrée cfp
+    for el in travel_keys:
         if cfp > el:
             close_cfp = el
     if close_cfp == 0:
@@ -89,23 +90,24 @@ def make_travel_equiv(cfp):
     else:
         equiv = travel_cfp_final[close_cfp]
         if equiv[2] == 1:
-            return "votre panier est équivalent à un trajet " + equiv[1] + " en " + equiv[0]
+            return "Votre panier est équivalent à un trajet " + equiv[1] + " en " + equiv[0]
         else:
-            return "votre panier est équivalent à un aller-retour " + equiv[1] + " en " + equiv[0]
+            return "Votre panier est équivalent à un aller-retour " + equiv[1] + " en " + equiv[0]
 
 
 def make_tree_equiv(cfp):
     ref_cfp = 25
-    equiv = convert_days_to_date(round((cfp * 365 )/ ref_cfp,0))
+    equiv = convert_days_to_date(round((cfp * 365) / ref_cfp, 0))
     result = ""
     if equiv[0] != 0:
-        result = "il faudra " + str(equiv[0]) + " an" + ("", "s")[equiv[0] > 2]
-        result += (("", " et " + str(equiv[2]) + " jour" + ("", "s")[equiv[2] > 2])[equiv[2] > 0], " et " + str(equiv[1]) + " mois")[equiv[1] > 0]
+        result = "Il faudra " + str(equiv[0]) + " an" + ("", "s")[equiv[0] > 2]
+        result += (("", " et " + str(equiv[2]) + " jour" + ("", "s")[equiv[2] > 2])[equiv[2] > 0],
+                   " et " + str(equiv[1]) + " mois")[equiv[1] > 0]
     elif equiv[1] != 0:
-        result = "il faudra " + str(equiv[1]) + " mois"
+        result = "Il faudra " + str(equiv[1]) + " mois"
         result += ("", " et " + str(equiv[2]) + " jour" + ("", "s")[equiv[2] > 2])[equiv[2] > 0]
     elif equiv[2] != 0:
-        result = "il faudra " + str(equiv[2]) + " jour" + ("", "s")[equiv[2] > 2]
+        result = "Il faudra " + str(equiv[2]) + " jour" + ("", "s")[equiv[2] > 2]
     else:
         return -1
     result += " à un arbre pour absorber l'empreinte carbone de votre panier"
@@ -115,18 +117,23 @@ def make_tree_equiv(cfp):
 def make_money_equiv(cfp):
     ref_cfp = 0.024
     equiv = ref_cfp * cfp
-    if round(equiv,2) == 0:
+    if round(equiv, 2) == 0:
         return -1
     else:
-        return "il faudrait faire un don de " + str(round(equiv,2)) + "€ pour compenser l'empreinte carbone de votre panier"
+        return "Il faudrait faire un don de " + str(
+            round(equiv, 2)) + "€ pour compenser l'empreinte carbone de votre panier"
+
 
 def make__delta_avg_equiv(cfp):
     ref_cfp = 1420
     equiv = (cfp * 52 - ref_cfp) / ref_cfp
     if equiv != 0:
-        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + (str(int(round(equiv * 100,0))),str(round(equiv * 100,2)))[equiv < 0.1] + "% de " + ("plus ", "moins ") [equiv < 0] + "qu'un français en moyenne"
+        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + \
+               (str(abs(int(equiv * 100))), str(abs(round(equiv * 100, 1))))[abs(equiv) < 0.1] + "% de " + \
+               ("plus ", "moins ")[equiv < 0] + "qu'un français en moyenne"
     else:
         return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez comme un français en moyenne"
+
 
 def get_equiv_carbone(cfp_kg):
     """
