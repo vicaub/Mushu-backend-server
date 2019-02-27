@@ -12,6 +12,7 @@ epicerie = Product("Épicerie", None, [
     ]),
     Product("Épices", None, [
         Product("Sucre", 2.17),
+        Product("glucose", 1.816),
         Product("Sel", 0.60),
         Product("Poivre", 3.42),
         Product("Ail", 0.54),
@@ -49,7 +50,8 @@ epicerie = Product("Épicerie", None, [
             Product("Pains", None, [
                 Product("Pain blanc", 1.58),
                 Product("Pain complet", 1.58)
-            ])
+            ]),
+            Product("Amidon", None)
         ]),
         Product("Avoine")
     ]),

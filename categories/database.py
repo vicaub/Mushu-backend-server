@@ -8,7 +8,7 @@ products = [
     produits_laitiers.produits_laitiers,
     viandes.viandes,
     epicerie.epicerie,
-    boissons.boissons
+    boissons.boissons,
 ]
 
 database = Product("database", None, products)
