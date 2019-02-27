@@ -7,7 +7,7 @@ class Ingredient:
     expression_compilee = re.compile(expression)
     stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
-    useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "vegan", "de"]
+    useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "vegan", "de", "à", "a", "et", 'du']
 
     def __init__(self, name, ingredient_string, percent=None, children=None):
         if children is None:
@@ -17,9 +17,9 @@ class Ingredient:
         self.children = children
         self.match = None
         self.ingredient_string = ingredient_string
+        self.remove_useless_words()
         if not self.children:
             self.parse_string()
-        self.remove_useless_words()
 
     def parse_string(self):
         """
@@ -27,7 +27,6 @@ class Ingredient:
         parenthesis are considered as children delimiters
         """
         if self.ingredient_string:
-            # TODO - Sophie owner
             stack = []
             start = None
 
@@ -66,22 +65,17 @@ class Ingredient:
                         name = self.ingredient_string[start:i + 1]
                     self.children.append(Ingredient(name, None))
 
-    # def add_children(self, split_string):
-    #     for child in split_string:
-    #         self.children.append(Ingredient("key", "string"))
-    #
-    #     return True
-    
     def remove_useless_words(self):
-        temp = self.name.split(" ")
-        for word in temp:
-            if word in Ingredient.useless_words:
-                temp.remove(word)
-        self.name = " ".join(temp)
-        if self.children:
-            for i in range(len(self.children)):
-                self.children[i].remove_useless_words()
-    
+        original_ing = self.name.split(" ")
+        keeped_ing = []
+        for word in original_ing:
+            if word.lower() not in Ingredient.useless_words:
+                keeped_ing.append(word)
+        self.name = " ".join(keeped_ing)
+        # if self.children:
+        #     for i in range(len(self.children)):
+        #         self.children[i].remove_useless_words()
+
     def update_percent(self):
         # if il y a un pourcentage et un if il y a pas de pourcentage
         self.assign_percent_from_name()
@@ -252,7 +246,7 @@ class Ingredient:
                 stop_index = l
                 break
         if stop_index:
-            #print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
+            # print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
             # print("les enfants restants sont: ", self.children)
 
