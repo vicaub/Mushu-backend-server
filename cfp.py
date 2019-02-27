@@ -31,7 +31,7 @@ def get_cfp(off_response):
         matching = Matching(ingredient)
         cfp = matching.compute_footprint()
 
-        return {"value": cfp, "unit": "kg/kg", "cfp_in_api": False, "ingredients": str(ingredient)}
+        return {"value": cfp, "cfp_in_api": False, "ingredients": str(ingredient)}
 
 
 def make_response(barcode):
@@ -63,11 +63,13 @@ def make_response(barcode):
 
     return response
 
-def build_weight(quantity_string, dictionnaire = {}):
+def build_weight(quantity_string):
+    dictionnaire = {}
     list_unities_re = re.compile(r"g|kg|mg|l|cl|dl|ml")
     if re.search('\d+',quantity_string.lower()):
-        qte = re.search('\d+',quantity_string.lower())
-        dictionnaire["weight"] = float(qte[0])
+        qte = re.search('\d+,\d+|\d+\.\d+|\d+',quantity_string.lower())
+        qte_float = float(qte[0].replace(",","."))
+        dictionnaire["weight"] = qte_float
         qte_unit_string = quantity_string[qte.span()[1]:].lower()
 
         if list_unities_re.search(qte_unit_string):
@@ -79,9 +81,10 @@ def build_weight(quantity_string, dictionnaire = {}):
         raise ValueError("Il n'y a pas de chiffre indiquant la quantité")
     return dictionnaire
 
-def calcul_cfp(CFPdensity, weight, weightunit, dictionnaire = {}):
+def calcul_cfp(CFPdensity, weight, weightunit):
     """Calcul de l'empreinte carbone correspondant à la bonne quantité de produit dans une unité pertinente"""
     # Pour les unités de masses (kg, g, mg et celles de volumes appropriées)
+    dictionnaire = {}
     if weightunit == "kg":
         truecfp = float(weight)*float(CFPdensity)
         if truecfp >= 1:
@@ -117,16 +120,3 @@ def calcul_cfp(CFPdensity, weight, weightunit, dictionnaire = {}):
             dictionnaire["CFPUnit"] = "g"
     return (dictionnaire)
 
-
-if __name__ == "__main__":
-    # test de make_response
-    res = make_response(str(3229820795676))
-    print(res)
-    res_2 = make_response(str(3033490306014))
-    print(res_2)
-    res_3 = make_response(str(3324498000746))
-    print(res_3)
-
-    # test d'assignation de pourcentage
-    test = calcul_cfp(1.5,100,'g')
-    print(test)
