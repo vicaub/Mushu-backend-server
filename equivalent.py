@@ -30,7 +30,7 @@ def make_email_equiv(cfp_kg):
 def make_tree_equiv(cfp_kg):
     cfp_model = 25
     equiv = cfp_kg / cfp_model
-    text = start + "??????la consommation en carbone de 1 arbre en " + \
+    text = start + "la consommation en carbone de 1 arbre en " + \
            (str((round(equiv, 1))) + " an", str(round(equiv * 12, 1)) + " mois")[equiv < 1] + ("", "s")[equiv > 2.0]
     return {"value": equiv, "text": text}
 
@@ -41,7 +41,7 @@ def make_electricity_equiv(cfp_kg):
     text = start + "la consommation en carbone pour " + str(
         round(
             equiv)) + " kWh d'électricité, soit la consommation d'une ampoule basse-consommation allumée pendant " + str(
-        round(equiv * 5 / 22)) + " heure????" + ("", "s")[equiv > 2.0] + " pas convaincu par l'équivalent en heure"
+        round(equiv * 5 / 22)) + " heure" + ("", "s")[equiv > 2.0] + " pas convaincu par l'équivalent en heure"
     return {"value": equiv, "text": text}
 
 
