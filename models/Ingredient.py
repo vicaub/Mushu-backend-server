@@ -226,7 +226,7 @@ class Ingredient:
         Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
         i est le premier ingrédient auquel on doit assigner un pourcentage
         """
-        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "dextrose",
+        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "émulsifiant" ,"dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
                              "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arôme",
                              "arômes", "colorants", "colorant", "contient", "enzyme", "épaississant", "édulcorants",
