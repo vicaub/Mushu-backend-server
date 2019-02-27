@@ -11,14 +11,14 @@ class TestIngredient(unittest.TestCase):
                           "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
 
         self.assertEqual(8, len(test.children))
-        self.assertEqual("Farine de BLE 27%", test.children[0].name)
-        self.assertEqual("poudres à lever : diphosphates et carbonates de sodium", test.children[7].name)
+        self.assertEqual("Farine BLE 27%", test.children[0].name)
+        self.assertEqual("poudres lever : diphosphates carbonates sodium", test.children[7].name)
 
         test2 = Ingredient("test2",
                            "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
 
         self.assertEqual(11, len(test2.children))
-        self.assertEqual("Pomme de terre précuite 38%", test2.children[0].name)
+        self.assertEqual("Pomme terre précuite 38%", test2.children[0].name)
         self.assertEqual("poivre blanc", test2.children[10].name)
         self.assertEqual("contient lait", test2.children[3].children[0].name)
 
@@ -29,8 +29,8 @@ class TestIngredient(unittest.TestCase):
         self.assertEqual(5, len(test3.children[0].children))
         self.assertEqual(5, len(test3.children[0].children[0].children))
         self.assertEqual("épaississants", test3.children[0].children[4].name)
-        self.assertEqual("pâte à crumble 32,9%", test3.children[1].name)
-        self.assertEqual("extrait de paprika et de curcuma", test3.children[1].children[3].children[6].children[0].name)
+        self.assertEqual("pâte crumble 32,9%", test3.children[1].name)
+        self.assertEqual("extrait paprika curcuma", test3.children[1].children[3].children[6].children[0].name)
 
         test4 = Ingredient("test4",
                            "CHOCOLAT SUPÉRIEUR AU LAIT 47% (SUCRE, LAIT EN POUDRE, BEURRE DE CACAO, PÂTE DE CACAO, ÉMULSIFIANTS : LÉCITHINES (SOJA), VANILLINE), LAIT ÉCRÉMÉ EN POUDRE, SUCRE, GRAISSES VÉGÉTALES, BEURRE concentré, ÉMULSIFIANTS : LÉCITHINES (soja), VANILLINE")
