@@ -1,6 +1,6 @@
 import unittest
 
-from cfp import openfoodfacts_api, get_cfp, make_response, build_weight, calcul_cfp
+from cfp import openfoodfacts_api, get_cfp, make_response, build_weight, change_units
 
 
 class TestCFP(unittest.TestCase):
@@ -28,9 +28,9 @@ class TestCFP(unittest.TestCase):
         res1 = make_response(bc1)
         res2 = make_response(bc2)
         res3 = make_response(bc3)
-        self.assertEqual(res1["value"], 178)
+        self.assertEqual(res1["CFPDensity"], 178)
         self.assertEqual(res1["unit"], "g")
-        self.assertEqual(res2["value"]/2, res2["TotalCFP"])
+        self.assertEqual(res2["CFPDensity"]/2, res2["TotalCFP"])
         self.assertEqual(res2["weight"],500)
         self.assertEqual(res2["weightUnit"],"g")
         self.assertEqual(res3["weight"], 250)

@@ -1,7 +1,4 @@
-import traceback
-
 import requests
-
 from errors.cfp_errors import ProductNotFoundError, APICallError, APIResponseError
 from models.Ingredient import Ingredient
 from models.Matching import Matching
@@ -21,7 +18,7 @@ def get_cfp(off_response):
         # CFP already in API response
         cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
         cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
-        return {"value": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
+        return {"CFPDensity": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
     except KeyError:
         # We need to compute manually CFP
         ingredient_string = off_response["product"]["ingredients_text"]
@@ -31,7 +28,7 @@ def get_cfp(off_response):
         matching = Matching(ingredient)
         cfp = matching.compute_footprint()
 
-        return {"value": cfp, "cfp_in_api": False, "ingredients": str(ingredient)}
+        return {"CFPDensity": cfp, "cfp_in_api": False, "ingredients": str(ingredient)}
 
 
 def make_response(barcode):
@@ -50,25 +47,25 @@ def make_response(barcode):
         response["original_ingredients"] = off_response["product"]["ingredients_text"]
         response["image_url"] = off_response["product"]["image_url"]
         quantity_string = off_response["product"]["quantity"]
-        dico = build_weight(quantity_string)
-        response.update(dico)
+        response.update(build_weight(quantity_string))
 
     except KeyError:
         raise APIResponseError()
 
     response = {**get_cfp(off_response), **response}
 
-    dico_cfp = calcul_cfp(response["value"], response["weight"], response["weightUnit"])
+    dico_cfp = change_units(response["CFPDensity"], response["weight"], response["weightUnit"])
     response.update(dico_cfp)
 
     return response
 
+
 def build_weight(quantity_string):
     dictionnaire = {}
     list_unities_re = re.compile(r"g|kg|mg|l|cl|dl|ml")
-    if re.search('\d+',quantity_string.lower()):
-        qte = re.search('\d+,\d+|\d+\.\d+|\d+',quantity_string.lower())
-        qte_float = float(qte[0].replace(",","."))
+    if re.search('\d+', quantity_string.lower()):
+        qte = re.search('\d+,\d+|\d+\.\d+|\d+', quantity_string.lower())
+        qte_float = float(qte[0].replace(",", "."))
         dictionnaire["weight"] = qte_float
         qte_unit_string = quantity_string[qte.span()[1]:].lower()
 
@@ -81,12 +78,13 @@ def build_weight(quantity_string):
         raise ValueError("Il n'y a pas de chiffre indiquant la quantité")
     return dictionnaire
 
-def calcul_cfp(CFPdensity, weight, weightunit):
+
+def change_units(CFPdensity, weight, weightunit):
     """Calcul de l'empreinte carbone correspondant à la bonne quantité de produit dans une unité pertinente"""
     # Pour les unités de masses (kg, g, mg et celles de volumes appropriées)
     dictionnaire = {}
     if weightunit == "kg":
-        truecfp = float(weight)*float(CFPdensity)
+        truecfp = float(weight) * float(CFPdensity)
         if truecfp >= 1:
             dictionnaire["TotalCFP"] = truecfp
             dictionnaire["CFPUnit"] = "kg"
@@ -119,4 +117,3 @@ def calcul_cfp(CFPdensity, weight, weightunit):
             dictionnaire["TotalCFP"] = truecfp * 1000
             dictionnaire["CFPUnit"] = "g"
     return (dictionnaire)
-
