@@ -120,7 +120,7 @@ def make_money_equiv(cfp):
     else:
         return "il faudrait faire un don de " + str(round(equiv,2)) + "€ pour compenser l'empreinte carbone de votre panier"
 
-def make__delta_avg_equiv(cfp):
+def make_delta_avg_equiv(cfp):
     ref_cfp = 1420
     equiv = (cfp * 52 - ref_cfp) / ref_cfp
     if equiv != 0:
@@ -134,24 +134,25 @@ def get_equiv_carbone(cfp_kg):
     :return:
     """
 
-    json = dict()
+    equivalents = []
+
 
     # travel
     if make_travel_equiv(cfp_kg) != -1:
-        json["travel"] = make_travel_equiv(cfp_kg)
+        equivalents.append({"name": "travel", "text": make_travel_equiv(cfp_kg)})
 
     # tree
     if make_tree_equiv(cfp_kg) != -1:
-        json["tree"] = make_tree_equiv(cfp_kg)
+        equivalents.append({"name": "tree", "text": make_tree_equiv(cfp_kg)})
 
     # money to compensate
     if make_money_equiv(cfp_kg) != -1:
-        json["money"] = make_money_equiv(cfp_kg)
+        equivalents.append({"name": "money", "text": make_money_equiv(cfp_kg)})
 
     # delta french average
-    json["delta_avg"] = make__delta_avg_equiv(cfp_kg)
+    equivalents.append({"name": "delta_avg", "text": make_delta_avg_equiv(cfp_kg)})
 
-    return json
+    return equivalents
 
 
 if __name__ == "__main__":
@@ -160,4 +161,4 @@ if __name__ == "__main__":
     print(make_travel_equiv(cfp1))
     print(make_tree_equiv(cfp))
     print(make_money_equiv(cfp))
-    print(make__delta_avg_equiv(cfp1))
+    print(make_delta_avg_equiv(cfp1))
