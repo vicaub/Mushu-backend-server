@@ -8,14 +8,14 @@ boissons = Product("Boissons", None,
                              ]),
                     Product("Boissons froides", None,
                             [Product("Eau", None,
-                                     [Product("Eau du robinet", 0.04),
-                                      Product("Eau en bouteille", 0.45)
+                                     [Product("Eau robinet", 0.04),
+                                      Product("Eau bouteille", 0.45)
                                       ]),
                              Product("Jus", None,
                                      [Product("Jus d'orange", 2.28),
-                                      Product("Jus de pomme", 1.19),
-                                      Product("Jus de poire", 2.03),
-                                      Product("Jus de fruit", 2.28)
+                                      Product("Jus pomme", 1.19),
+                                      Product("Jus poire", 2.03),
+                                      Product("Jus fruit", 2.28)
                                       ]),
                              Product("Boissons gazeuzes", None,
                                      [Product("Soda", 1.39),

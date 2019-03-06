@@ -4,17 +4,17 @@ fruits = Product("fruit", None,
                  [Product("Pomme", None,
                           [
                               Product("pomme france", 0.3),
-                              Product("Pomme amérique du Sud", 1.3)
+                              Product("Pomme amérique Sud", 1.3)
                           ]),
                   Product("Abricot", None,
                           [
                               Product("Abricot saison (France)", 0.3),
-                              Product("Abricot 'Pays du Sud'", 0.5)
+                              Product("Abricot 'Pays Sud'", 0.5)
                           ]),
                   Product("peche", None,
                           [
                               Product("peche france", 0.3),
-                              Product("Pêche 'Pays du Sud'", 0.5)
+                              Product("Pêche 'Pays Sud'", 0.5)
                           ]),
                   Product("Fruit", None,
                           [
@@ -33,13 +33,13 @@ fruits = Product("fruit", None,
                           ]),
                   Product("orange", None,
                           [
-                              Product("Orange destinée à l'industrie", 0.5),
+                              Product("Orange destinée l'industrie", 0.5),
                               Product("orange", 0.5)
                           ]),
                   Product("fraise", None,
                           [
                               Product("fraise saison (france)", 0.6),
-                              Product("fraise 'pays du sud", 0.8),
+                              Product("fraise 'pays sud", 0.8),
                               Product("Fraise hors saison sous serre (France)", 3.4)
                           ]),
                   Product("Raisin", 0.6),

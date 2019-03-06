@@ -11,14 +11,14 @@ class TestIngredient(unittest.TestCase):
                           "Farine de BLE 27%, sucre, huile de colza, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
 
         self.assertEqual(8, len(test.children))
-        self.assertEqual("Farine de BLE 27%", test.children[0].name)
-        self.assertEqual("poudres à lever : diphosphates et carbonates de sodium", test.children[7].name)
+        self.assertEqual("Farine BLE 27%", test.children[0].name)
+        self.assertEqual("poudres lever : diphosphates carbonates sodium", test.children[7].name)
 
         test2 = Ingredient("test2",
                            "Pomme de terre précuite 38%, eau, oignon 14,2%, comté (contient lait) 8,6%, crème fraîche liquide (lait) 6,5%, lait entier en poudre, beurre (lait), fécule de pomme de terre, sel, épaississant : gomme xanthane, poivre blanc.")
 
         self.assertEqual(11, len(test2.children))
-        self.assertEqual("Pomme de terre précuite 38%", test2.children[0].name)
+        self.assertEqual("Pomme terre précuite 38%", test2.children[0].name)
         self.assertEqual("poivre blanc", test2.children[10].name)
         self.assertEqual("contient lait", test2.children[3].children[0].name)
 
@@ -29,8 +29,8 @@ class TestIngredient(unittest.TestCase):
         self.assertEqual(5, len(test3.children[0].children))
         self.assertEqual(5, len(test3.children[0].children[0].children))
         self.assertEqual("épaississants", test3.children[0].children[4].name)
-        self.assertEqual("pâte à crumble 32,9%", test3.children[1].name)
-        self.assertEqual("extrait de paprika et de curcuma", test3.children[1].children[3].children[6].children[0].name)
+        self.assertEqual("pâte crumble 32,9%", test3.children[1].name)
+        self.assertEqual("extrait paprika curcuma", test3.children[1].children[3].children[6].children[0].name)
 
         test4 = Ingredient("test4",
                            "CHOCOLAT SUPÉRIEUR AU LAIT 47% (SUCRE, LAIT EN POUDRE, BEURRE DE CACAO, PÂTE DE CACAO, ÉMULSIFIANTS : LÉCITHINES (SOJA), VANILLINE), LAIT ÉCRÉMÉ EN POUDRE, SUCRE, GRAISSES VÉGÉTALES, BEURRE concentré, ÉMULSIFIANTS : LÉCITHINES (soja), VANILLINE")
@@ -84,10 +84,24 @@ class TestIngredient(unittest.TestCase):
         test1 = Ingredient("test",
                            "Farine de BLE 27%, sucre, huile de colza 10%, OEUFS entiers, sirop de sucre inverti, sel, arôme naturel, poudres à lever : diphosphates et carbonates de sodium.")
 
-        test1.assign_percent_end(3, 10.0)
+        test2 = Ingredient("test2",
+                           "Farine de blé 55 %, eau 10%, son de blé 6,7 %, huile de colza, sucre, acidifiant, levure (contient alcool) ,sel, arôme, gluten de blé,farine de seigle maltée, vinaigre, extrait d'acérola, arôme (contient alcool)")
+        test3 = Ingredient("test3",
+                           "Sucre 50%, sirop de glucose 15%, gélatine, e452, acide citrique,colorants : curcumine, carmins, carotènes végétaux" )
+        test4 = Ingredient("test3",
+                           "Sucre 50%, sirop de glucose 15%, gélatine, trace de lactose, acide citrique,colorants : curcumine, carmins, carotènes végétaux")
+
+        test1.assign_percent_end(3, 10)
+        test2.assign_percent_end(3, 28.3)
+        test3.assign_percent_end(2, 35)
+        test4.assign_percent_end(2, 35)
+
         self.assertEqual(5.0, test1.children[3].percent)
         self.assertEqual(2.5, test1.children[4].percent)
         self.assertEqual(len(test1.children), 5)
+        self.assertEqual(len(test2.children), 5)
+        self.assertEqual(len(test3.children), 3)
+        self.assertEqual(len(test4.children), 3)
 
     def test_middle_percent(self):
         test = Ingredient("test", "fruit rouge 60%, eau, épaississant 1%")

@@ -65,11 +65,16 @@ First create a pair of public/private ssh keys.
 
 Add your public ssh key to `~/.ssh/authorized_keys` in remote server.
 
+Then connect to the server 
+- Mac and Linux users: command line
 ```
 ssh ubuntu@54.37.23.103 
-cd mushu-back`
+cd mushu-back
 ```
 
+- Windows users: Putty
+
+ip address: 54.37.23.103 
 
 Finally you can run the server and it will listen at ip `54.37.23.103`
 

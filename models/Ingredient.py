@@ -5,8 +5,9 @@ from fuzzywuzzy import process as fuzzy
 class Ingredient:
     expression = r"[0-9]+[ .,]?[0-9]*?[ .]?[%]"
     expression_compilee = re.compile(expression)
-    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])$"
+    stop_liste_expression = r"(sel|sodium|trace)|([a-z][0-9]{3}|[a-z][0-9]{3}[a-z])"
     stop_liste_expression_compilee = re.compile(stop_liste_expression)
+    useless_words = ["pur", "bio", "dehydraté", "proteine", "pépite", "pepites", "vegan", "de", "à", "a", "et", 'du']
 
     def __init__(self, name, ingredient_string, percent=None, children=None):
         if children is None:
@@ -16,6 +17,7 @@ class Ingredient:
         self.children = children
         self.match = None
         self.ingredient_string = ingredient_string
+        self.remove_useless_words()
         if not self.children:
             self.parse_string()
 
@@ -25,10 +27,10 @@ class Ingredient:
         parenthesis are considered as children delimiters
         """
         if self.ingredient_string:
-            # TODO - Sophie owner
             stack = []
             start = None
-
+            # on remplace les éventuels œ par oe
+            self.ingredient_string = self.ingredient_string.replace("œ", "oe")
             for i in range(len(self.ingredient_string)):
                 if type(start) != int:
                     if self.ingredient_string[i].isalpha():
@@ -64,11 +66,16 @@ class Ingredient:
                         name = self.ingredient_string[start:i + 1]
                     self.children.append(Ingredient(name, None))
 
-    # def add_children(self, split_string):
-    #     for child in split_string:
-    #         self.children.append(Ingredient("key", "string"))
-    #
-    #     return True
+    def remove_useless_words(self):
+        original_ing = self.name.split(" ")
+        keeped_ing = []
+        for word in original_ing:
+            if word.lower() not in Ingredient.useless_words:
+                keeped_ing.append(word)
+        self.name = " ".join(keeped_ing)
+        # if self.children:
+        #     for i in range(len(self.children)):
+        #         self.children[i].remove_useless_words()
 
     def update_percent(self):
         # if il y a un pourcentage et un if il y a pas de pourcentage
@@ -182,51 +189,60 @@ class Ingredient:
         """
         assigner les pourcentages sur un groupe au milieu
         """
-        if j - i + 1 > 0 and percent_left > percent_right:
-            # calcul de la moyenne
-            average = (percent_left + percent_right) / 2
-            # si j'ai un nombre impair de pourcentages à assigner
-            if (j - i + 1) % 2 == 1:
-                # calcul de l'indice du milieu
-                i_middle = i + (j - i) // 2
-                # j'alloue le pourcentage à l'ingrédient du milieu
-                self.children[i_middle].percent = average
-                # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
-                if j - i + 1 > 1:
-                    self.assign_percent_middle(i, i_middle - 1, percent_left, average)
-                    self.assign_percent_middle(i_middle + 1, j, average, percent_right)
+        if j - i + 1 > 0:
+            if percent_left > percent_right:
+                # calcul de la moyenne
+                average = (percent_left + percent_right) / 2
+                # si j'ai un nombre impair de pourcentages à assigner
+                if (j - i + 1) % 2 == 1:
+                    # calcul de l'indice du milieu
+                    i_middle = i + (j - i) // 2
+                    # j'alloue le pourcentage à l'ingrédient du milieu
+                    self.children[i_middle].percent = average
+                    # j'applique récursivement si ce que je viens de traiter avait plus d'un élément
+                    if j - i + 1 > 1:
+                        self.assign_percent_middle(i, i_middle - 1, percent_left, average)
+                        self.assign_percent_middle(i_middle + 1, j, average, percent_right)
 
-            # si j'ai un nombre pair de pourcentages à assigner:
-            else:
-                # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
-                if j - i + 1 == 2:
-                    average_left = (percent_left + average) / 2
-                    average_right = (average + percent_right) / 2
-                    self.children[i].percent = average_left
-                    self.children[j].percent = average_right
-                # sinon je fais un appel récursif
+                # si j'ai un nombre pair de pourcentages à assigner:
                 else:
-                    self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
-                    self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+                    # si je n'ai que 2 ingrédient alors j'assigne un pourcentage
+                    if j - i + 1 == 2:
+                        average_left = (percent_left + average) / 2
+                        average_right = (average + percent_right) / 2
+                        self.children[i].percent = average_left
+                        self.children[j].percent = average_right
+                    # sinon je fais un appel récursif
+                    else:
+                        self.assign_percent_middle(i, i + (j - i) // 2, percent_left, average)
+                        self.assign_percent_middle(i + (j - i) // 2 + 1, j, average, percent_right)
+            else:
+                # left percent < right percent il y a un probleme
+                for k in range(i, j + 1):
+                    self.children[k].percent = 0
 
     def assign_percent_end(self, i, percent_left):
         """
         Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
+        i est le premier ingrédient auquel on doit assigner un pourcentage
         """
-        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "dextrose",
+        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "émulsifiant" ,"dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
-                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arome",
+                             "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arôme",
                              "arômes", "colorants", "colorant", "contient", "enzyme", "épaississant", "édulcorants",
-                             "édulcorant"]
+                             "édulcorant", "diphosphates", "sodium", "extrait"]
 
         stop_index = None
         for l in range(i, len(self.children)):
-            if not Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) \
-                    or fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 90:
-                # rajouter la fonction de victor qui utilise la stop_liste_to_put
-                self.children[l].percent = float(percent_left / 2)
-                percent_left = self.children[l].percent
-                # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+            if fuzzy.extractOne(self.children[l].name.lower(), stop_liste_to_put)[1] < 89:
+                if Ingredient.stop_liste_expression_compilee.search(self.children[l].name.lower()) is None:
+                    # rajouter la fonction de victor qui utilise la stop_liste_to_put
+                    self.children[l].percent = float(percent_left / 2)
+                    percent_left = self.children[l].percent
+                    # print("nom: ", self.children[l].percent, "pourcentage assigné", percent_left)
+                else:
+                    stop_index = l
+                    break
             else:
                 stop_index = l
                 break
@@ -277,3 +293,4 @@ class Ingredient:
             match_string = ", match: " + str(self.match)
 
         return "name: " + self.name + percent_string + match_string + children_string
+
