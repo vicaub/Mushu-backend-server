@@ -37,7 +37,7 @@ produits_laitiers = Product("Produit Laitier Oeuf", None,
                                                      Product("Crème", 4.5)
                                                  ])
                                      ]),
-                             Product("oeuf", None,
+                             Product("Oeuf", None,
                                      [
                                          Product("Oeuf moyen", 1.76),
                                          Product("Oeuf catégorie 0 biologique", 1.52),

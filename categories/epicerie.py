@@ -11,7 +11,10 @@ epicerie = Product("Épicerie", None, [
         Product("Vinaigre de vin", 4.23)
     ]),
     Product("Épices", None, [
-        Product("Sucre", 2.17),
+        Product("Sucres", None,
+                [Product("Sucre", 2.17),
+                 Product("Dextrose", None)
+                 ]),
         Product("glucose", 1.816),
         Product("Sel", 0.60),
         Product("Poivre", 3.42),
@@ -29,7 +32,8 @@ epicerie = Product("Épicerie", None, [
         Product("Coriandre", 2.87),
         Product("Menthe", 2.87),
         Product("Thym", 2.87),
-        Product("Autres épices", 3.19)
+        Product("Autres épices", 3.19),
+        Product("Origan", None)
     ]),
     Product("Sauces", None, [
         Product("Ketchup", 2.70),
