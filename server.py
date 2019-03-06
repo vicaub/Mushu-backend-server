@@ -43,6 +43,9 @@ def process_barcode():
 @app.route("/equivalent")
 def get_equivalent():
     cfp = float(request.args.get('cfp'))
+    unit = request.args.get('unit')
+    if unit == 'g':
+        cfp /= 1000
     equivalent = get_equiv_carbone(cfp)
     return jsonify(equivalent)
 
