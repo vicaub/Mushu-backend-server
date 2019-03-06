@@ -1,7 +1,7 @@
 from categories import fruits, legumes, poissons, produits_laitiers, viandes, epicerie, boissons
 from models.Product import Product
 
-products = [
+categories = [
     fruits.fruits,
     legumes.legumes,
     poissons.poissons,
@@ -11,4 +11,7 @@ products = [
     boissons.boissons
 ]
 
-database = Product("database", None, products)
+for category in categories:
+    category.set_children_category(category)
+
+database = Product("database", None, categories)
