@@ -246,7 +246,7 @@ class Ingredient:
             else:
                 stop_index = l
                 break
-        if stop_index:
+        if stop_index is not None:
             # print("nous avous supprimons les éléments suivants: ", self.children[stop_index:])
             self.children = self.children[:stop_index]
             # print("les enfants restants sont: ", self.children)
