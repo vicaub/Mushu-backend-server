@@ -126,13 +126,11 @@ def make_money_equiv(cfp):
 
 def make_delta_avg_equiv(cfp):
     ref_cfp = 1420
-    equiv = (cfp * 52 - ref_cfp) / ref_cfp
-    if equiv != 0:
-        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + \
-               (str(abs(int(equiv * 100))), str(abs(round(equiv * 100, 1))))[abs(equiv) < 0.1] + "% de " + \
-               ("plus ", "moins ")[equiv < 0] + "qu'un français en moyenne"
+    equiv = (cfp * 52) / ref_cfp
+    if round(equiv,1) != 1:
+        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + (str(round(equiv,1)),str(round(1/equiv,1))) [equiv < 1] + " fois " + ("plus ", "moins ")[equiv < 1] + "que la moyenne française"
     else:
-        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez comme un français en moyenne"
+        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors êtes dans la consommation française moyenne"
 
 
 def get_equiv_carbone(cfp_kg):
@@ -164,7 +162,7 @@ def get_equiv_carbone(cfp_kg):
 
 if __name__ == "__main__":
     cfp = 1.720747407407407
-    cfp1 = 35
+    cfp1 = 14
     print(make_travel_equiv(cfp1))
     print(make_tree_equiv(cfp))
     print(make_money_equiv(cfp))
