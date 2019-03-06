@@ -26,7 +26,6 @@ class TestMatching(unittest.TestCase):
                             matching1.browse_database("viande", database))
 
         score3, expected_match = matching1.browse_database("Produit soufflé à base de pomme de terre", database)
-        print(score3, expected_match)
 
     def test_match_ingredient(self):
         fromage_product = produits_laitiers.children[0].children[3]
@@ -46,7 +45,6 @@ class TestMatching(unittest.TestCase):
         fromage_ingredient = Ingredient("fromage", None, percent=100)
         matching2 = Matching(fromage_ingredient)
         self.assertEqual(matching2.compute_footprint(), 5.44)
-        print(fromage_ingredient.match)
         self.assertEqual(fromage_ingredient.match, matching2.match_ingredient("fromage"))
 
         fromage_ingredient = Ingredient("fromage", None, percent=50)

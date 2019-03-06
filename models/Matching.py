@@ -61,7 +61,6 @@ class Matching:
             # when bottom ingredient match ingredient with product in db
             product = self.match_ingredient(self.ingredient.name)
             self.ingredient.match = product
-            print(product)
             footprint += product.cfp
 
         return footprint * self.ingredient.percent / 100
