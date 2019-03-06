@@ -18,17 +18,6 @@ class Matching:
         :param product: product object to be browse for matching with ingredient (start with full Product database)
         :return: tuple object (best matching score, product object that correspond to best match)
         """
-        # best_score = fuzz.token_set_ratio(ingredient_name, product.name)
-        # best_product = product
-        # if product.children and len(product.children) > 0:
-        #     for child in product.children:
-        #         child_best_score, child_best_product = self.browse_database(ingredient_name, child)
-        #         if child_best_score > best_score:
-        #             best_product = child_best_product
-        #             best_score = child_best_score
-        # print(ingredient_name, best_score, best_product)
-        # return best_score, best_product
-
         if product.children and len(product.children) > 0:
             best_score, best_product = fuzzy.extractOne(ingredient_name, product.convert_to_dict())[1:3]
             for child in product.children:
