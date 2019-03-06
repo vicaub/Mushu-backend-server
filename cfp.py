@@ -28,7 +28,7 @@ def get_cfp(off_response):
         matching = Matching(ingredient)
         cfp = matching.compute_footprint()
 
-        return {"CFPDensity": cfp, "cfp_in_api": False, "ingredients": str(ingredient)}
+        return {"CFPDensity": cfp, "cfp_in_api": False, "ingredients": ingredient.to_json()}
 
 
 def make_response(barcode):

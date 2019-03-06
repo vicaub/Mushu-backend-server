@@ -59,8 +59,9 @@ class Matching:
                 footprint += Matching(child).compute_footprint()
         else:
             # when bottom ingredient match ingredient with product in db
-            match_ingredient = self.match_ingredient(self.ingredient.name)
-            self.ingredient.match = (match_ingredient.name, match_ingredient.cfp)
-            footprint += match_ingredient.cfp
+            product = self.match_ingredient(self.ingredient.name)
+            self.ingredient.match = product
+            print(product)
+            footprint += product.cfp
 
         return footprint * self.ingredient.percent / 100

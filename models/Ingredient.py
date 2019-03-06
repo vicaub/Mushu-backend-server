@@ -17,6 +17,8 @@ class Ingredient:
         self.children = children
         self.match = None
         self.ingredient_string = ingredient_string
+        self.cfp = None
+
         self.remove_useless_words()
         if not self.children:
             self.parse_string()
@@ -293,4 +295,17 @@ class Ingredient:
             match_string = ", match: " + str(self.match)
 
         return "name: " + self.name + percent_string + match_string + children_string
+
+    def to_json(self):
+        json = dict()
+        json["name"] = self.name
+        json["percent"] = self.percent
+        if self.match:
+            json["match"] = self.match.to_json()
+        if self.children:
+            json["children"] = []
+            for child in self.children:
+                json["children"].append(child.to_json())
+        return json
+
 

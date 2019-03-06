@@ -76,6 +76,7 @@ class Product:
         cfp = self.__cfp
         if not cfp:
             cfp = self.retrieve_missing_cfp()
+            self.__cfp = cfp
         return cfp
 
     def __repr__(self):
@@ -86,3 +87,10 @@ class Product:
         # if self.children:
         #     product_print += ", " + str(self.children)
         return product_print
+
+    def to_json(self):
+        json = dict()
+        json["product"] = self.name
+        json["cfp"] = self.cfp
+        json["category"] = self.category.name
+        return json

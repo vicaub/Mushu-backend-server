@@ -231,6 +231,9 @@ class TestIngredient(unittest.TestCase):
         self.assertAlmostEqual(test.children[1].percent, 28.57, places=2)
         self.assertAlmostEqual(test.children[2].percent, 14.29, places=2)
 
+    def test_to_json(self):
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()
