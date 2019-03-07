@@ -81,7 +81,10 @@ class Ingredient:
 
     def update_percent(self):
         # if il y a un pourcentage et un if il y a pas de pourcentage
-        self.assign_percent_from_name()
+        for child in self.children:
+            child.assign_percent_from_name()
+        # if not self.percent:
+        #     self.assign_percent_from_name()
 
         # ajout du percentage 100 pour top ingredient
         if not self.percent:
