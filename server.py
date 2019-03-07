@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify
-from cfp import get_cfp, make_response
+from cfp import make_response
+from equivalent import get_equiv_carbone
 from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
 from errors.flask_errors import ApplicationError
 
@@ -39,5 +40,15 @@ def process_barcode():
         raise ApplicationError(message, payload={"barcode": barcode})
 
 
+@app.route("/equivalent")
+def get_equivalent():
+    cfp = float(request.args.get('cfp'))
+    unit = request.args.get('unit')
+    if unit == 'g':
+        cfp /= 1000
+    equivalent = get_equiv_carbone(cfp)
+    return jsonify(equivalent)
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

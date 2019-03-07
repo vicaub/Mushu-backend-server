@@ -14,9 +14,16 @@ class Product:
         self.__cfp = cfp
         self.children = children
         self.parent = None
+        self.category = None
         if self.children:
             for child in self.children:
                 child.parent = self
+
+    def set_children_category(self, category):
+        self.category = category
+        if self.children:
+            for child in self.children:
+                child.set_children_category(category)
 
     def get_leaves(self):
         if self.children and len(self.children) > 0:
@@ -69,8 +76,8 @@ class Product:
         cfp = self.__cfp
         if not cfp:
             cfp = self.retrieve_missing_cfp()
+            self.__cfp = cfp
         return cfp
-
 
     def __repr__(self):
         """
@@ -80,3 +87,10 @@ class Product:
         # if self.children:
         #     product_print += ", " + str(self.children)
         return product_print
+
+    def to_json(self):
+        json = dict()
+        json["product"] = self.name
+        json["cfp"] = self.cfp
+        json["category"] = self.category.name
+        return json

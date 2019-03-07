@@ -18,7 +18,7 @@ poissons = Product("poisson", children=[
 
     ]),
     Product("thon", 2.15, [
-        Product("thon en boite", 3.2)
+        Product("thon boite", 3.2)
     ])
     ,
     Product("saumon", 3.47, [
@@ -37,7 +37,7 @@ poissons = Product("poisson", children=[
             Product("dorade elevage filet", 9.2)
         ])
     ]),
-    Product("poisson de roche", 6.94, [
+    Product("poisson roche", 6.94, [
         Product("crustace", 5.3, [
             Product("moule", 5.3),
             Product("crabe", 5.7),
