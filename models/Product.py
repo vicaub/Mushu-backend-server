@@ -20,9 +20,9 @@ class Product:
                 child.parent = self
 
     def set_children_category(self, category):
+        self.category = category
         if self.children:
             for child in self.children:
-                child.category = category
                 child.set_children_category(category)
 
     def get_leaves(self):
