@@ -7,7 +7,7 @@ class APICallError(Exception):
 class ProductNotFoundError(Exception):
     def __init__(self):
         Exception.__init__(self)
-        self.message = "No product found. Please check your barcode"
+        self.message = "Nous n'avons pas trouvé les informations de ce produit :/"
 
 
 class APIResponseError(Exception):
