@@ -39,7 +39,7 @@ def process_barcode():
             message = str(e)
         raise ApplicationError(message, payload={"barcode": barcode})
     except Exception:
-        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu",
+        raise ApplicationError("Une erreur est survenue lors du calcul de l'empreinte carbone, veuillez vous adressez à l'équipe Mushu",
                                payload={"barcode": barcode})
 
 
@@ -59,7 +59,7 @@ def get_equivalent():
             message = str(e)
         raise ApplicationError(message, payload={"cfp": cfp, "unit": unit})
     except Exception:
-        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu",
+        raise ApplicationError("Une erreur est survenue lors du calcul de votre équivalent carbone, veuillez vous adressez à l'équipe Mushu",
                                payload={"cfp": cfp, "unit": unit})
 
 
