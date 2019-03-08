@@ -11,5 +11,6 @@ class ApplicationError(Exception):
 
     def to_dict(self):
         rv = dict(self.payload or ())
-        rv['message'] = self.message
+        rv['errorMessage'] = self.message
+        rv['statusCode'] = self.status_code
         return rv
