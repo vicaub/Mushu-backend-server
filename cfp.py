@@ -15,21 +15,22 @@ def openfoodfacts_api(barcode):
 
 
 def get_cfp(off_response):
-    try:
-        # CFP already in API response
-        cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
-        cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
-        return {"CFPDensity": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
-    except KeyError:
-        # We need to compute manually CFP
-        ingredient_string = off_response["product"]["ingredients_text"]
-        ingredient = Ingredient(off_response["product"]["product_name"], ingredient_string, percent=100)
-        ingredient.update_percent()
+    # try:
+    #     # CFP already in API response
+    #     cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
+    #     cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
+    #     return {"CFPDensity": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
+    # except KeyError:
 
-        matching = Matching(ingredient)
-        cfp = matching.compute_footprint()
+    # We need to compute manually CFP
+    ingredient_string = off_response["product"]["ingredients_text"]
+    ingredient = Ingredient(off_response["product"]["product_name"], ingredient_string, percent=100)
+    ingredient.update_percent()
 
-        return {"CFPDensity": cfp, "cfp_in_api": False, "ingredients": ingredient.to_json()}
+    matching = Matching(ingredient)
+    cfp = matching.compute_footprint()
+
+    return {"CFPDensity": cfp, "cfp_in_api": False, "ingredients": ingredient.to_json()}
 
 
 def make_response(barcode):

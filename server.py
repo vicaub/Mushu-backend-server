@@ -42,7 +42,8 @@ def process_barcode():
     except Exception as ex:
         print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise ApplicationError(
-            "Une erreur est survenue lors du calcul de l'empreinte carbone, veuillez vous adressez à l'équipe Mushu",
+            "Une erreur est survenue lors du calcul de l'empreinte carbone, vous pouvez signaler ce bug en envoyant "
+            "un email à l'équipe Mushu bugreport.team.mushu@gmail.com",
             payload={"barcode": barcode})
 
 
@@ -64,8 +65,8 @@ def get_equivalent():
     except Exception as ex:
         print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise ApplicationError(
-            "Une erreur est survenue lors du calcul de votre équivalent carbone, veuillez vous adressez à "
-            "bugreport.team.mushu@gmail.com",
+            "Une erreur est survenue lors du calcul de votre équivalent carbone, vous pouvez signaler ce bug en envoyant "
+            "un email à l'équipe Mushu bugreport.team.mushu@gmail.com",
             payload={"cfp": cfp, "unit": unit})
 
 
