@@ -20,8 +20,7 @@ def get_cfp(off_response):
         cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
         cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
         return {"CFPDensity": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
-    except KeyError as ex:
-        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
+    except KeyError:
         # We need to compute manually CFP
         ingredient_string = off_response["product"]["ingredients_text"]
         ingredient = Ingredient(off_response["product"]["product_name"], ingredient_string, percent=100)

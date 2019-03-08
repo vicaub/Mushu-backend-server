@@ -41,8 +41,9 @@ def process_barcode():
         raise ApplicationError(message, payload={"barcode": barcode})
     except Exception as ex:
         print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
-        raise ApplicationError("Une erreur est survenue lors du calcul de l'empreinte carbone, veuillez vous adressez à l'équipe Mushu",
-                               payload={"barcode": barcode})
+        raise ApplicationError(
+            "Une erreur est survenue lors du calcul de l'empreinte carbone, veuillez vous adressez à l'équipe Mushu",
+            payload={"barcode": barcode})
 
 
 @app.route("/equivalent")
@@ -62,8 +63,10 @@ def get_equivalent():
         raise ApplicationError(message, payload={"cfp": cfp, "unit": unit})
     except Exception as ex:
         print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
-        raise ApplicationError("Une erreur est survenue lors du calcul de votre équivalent carbone, veuillez vous adressez à l'équipe Mushu",
-                               payload={"cfp": cfp, "unit": unit})
+        raise ApplicationError(
+            "Une erreur est survenue lors du calcul de votre équivalent carbone, veuillez vous adressez à "
+            "bugreport.team.mushu@gmail.com",
+            payload={"cfp": cfp, "unit": unit})
 
 
 if __name__ == "__main__":

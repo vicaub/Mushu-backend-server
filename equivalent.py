@@ -3,10 +3,6 @@ import datetime
 
 start = "Votre panier est équivalent à "
 
-# TODO: voir problème tree equiv et electricity equiv (une ampouble basse conso fait du 100W max...)
-# TODO: calculer distance equiv en avion, train et voiture puis trouver un équivalent d'itinéraire
-# TODO: voir réponses formulaire
-
 travel_cfp = {0.8: ["TGV", "Paris-Lille"],
               1.1: ["TGV", "Paris-Rennes"],
               1.5: ["TGV", "Paris-Strasbourg"],
@@ -53,6 +49,7 @@ travel_cfp_final = {**travel_cfp, **travel_cfp_2}
 # on récupère les clefs du dictionnaire qui sont les empreintes carbonnes équivalentes
 travel_keys = list(travel_cfp_final.keys())
 travel_keys.sort()
+
 
 # food_cfp = {283: "Inde",
 #             640: "Chine",
@@ -127,8 +124,10 @@ def make_money_equiv(cfp):
 def make_delta_avg_equiv(cfp):
     ref_cfp = 1420
     equiv = (cfp * 52) / ref_cfp
-    if round(equiv,1) != 1:
-        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + (str(round(equiv,1)),str(round(1/equiv,1))) [equiv < 1] + " fois " + ("plus ", "moins ")[equiv < 1] + "que la moyenne française"
+    if round(equiv, 1) != 1:
+        return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors vous consommez " + \
+               (str(round(equiv, 1)), str(round(1 / equiv, 1)))[equiv < 1] + " fois " + ("plus ", "moins ")[
+                   equiv < 1] + "que la moyenne française"
     else:
         return "Si vous consommez le même panier toutes les semaines pour une seule personne, alors êtes dans la consommation française moyenne"
 
@@ -141,21 +140,21 @@ def get_equiv_carbone(cfp_kg):
 
     equivalents = []
 
+    if cfp_kg > 0:
+        # travel
+        if make_travel_equiv(cfp_kg) != -1:
+            equivalents.append({"name": "travel", "text": make_travel_equiv(cfp_kg)})
 
-    # travel
-    if make_travel_equiv(cfp_kg) != -1:
-        equivalents.append({"name": "travel", "text": make_travel_equiv(cfp_kg)})
+        # tree
+        if make_tree_equiv(cfp_kg) != -1:
+            equivalents.append({"name": "tree", "text": make_tree_equiv(cfp_kg)})
 
-    # tree
-    if make_tree_equiv(cfp_kg) != -1:
-        equivalents.append({"name": "tree", "text": make_tree_equiv(cfp_kg)})
+        # money to compensate
+        if make_money_equiv(cfp_kg) != -1:
+            equivalents.append({"name": "money", "text": make_money_equiv(cfp_kg)})
 
-    # money to compensate
-    if make_money_equiv(cfp_kg) != -1:
-        equivalents.append({"name": "money", "text": make_money_equiv(cfp_kg)})
-
-    # delta french average
-    equivalents.append({"name": "delta_avg", "text": make_delta_avg_equiv(cfp_kg)})
+        # delta french average
+        equivalents.append({"name": "delta_avg", "text": make_delta_avg_equiv(cfp_kg)})
 
     return equivalents
 
