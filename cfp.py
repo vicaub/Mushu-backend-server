@@ -3,6 +3,7 @@ from errors.cfp_errors import ProductNotFoundError, APICallError, APIResponseErr
 from models.Ingredient import Ingredient
 from models.Matching import Matching
 import re
+import traceback
 
 off_url = "https://fr.openfoodfacts.org/api/v0/produit/"
 
@@ -19,7 +20,8 @@ def get_cfp(off_response):
         cf_value = off_response["product"]["nutriments"]["carbon-footprint"]
         cf_unit = off_response["product"]["nutriments"]["carbon-footprint_unit"]
         return {"CFPDensity": float(cf_value), "unit": cf_unit, "cfp_in_api": True}
-    except KeyError:
+    except KeyError as ex:
+        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         # We need to compute manually CFP
         ingredient_string = off_response["product"]["ingredients_text"]
         ingredient = Ingredient(off_response["product"]["product_name"], ingredient_string, percent=100)
@@ -36,7 +38,8 @@ def make_response(barcode):
 
     try:
         off_response = openfoodfacts_api(barcode)
-    except Exception:
+    except Exception as ex:
+        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise APICallError()
 
     if off_response["status"] == 0:
@@ -49,7 +52,8 @@ def make_response(barcode):
         quantity_string = off_response["product"]["quantity"]
         response.update(build_weight(quantity_string))
 
-    except KeyError:
+    except KeyError as ex:
+        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise APIResponseError()
 
     response = {**get_cfp(off_response), **response}

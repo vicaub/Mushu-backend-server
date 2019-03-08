@@ -3,6 +3,7 @@ from cfp import make_response
 from equivalent import get_equiv_carbone
 from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
 from errors.flask_errors import ApplicationError
+import traceback
 
 app = Flask(__name__)
 
@@ -38,7 +39,8 @@ def process_barcode():
         except:
             message = str(e)
         raise ApplicationError(message, payload={"barcode": barcode})
-    except Exception:
+    except Exception as ex:
+        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise ApplicationError("Une erreur est survenue lors du calcul de l'empreinte carbone, veuillez vous adressez à l'équipe Mushu",
                                payload={"barcode": barcode})
 
@@ -58,7 +60,8 @@ def get_equivalent():
         except:
             message = str(e)
         raise ApplicationError(message, payload={"cfp": cfp, "unit": unit})
-    except Exception:
+    except Exception as ex:
+        print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise ApplicationError("Une erreur est survenue lors du calcul de votre équivalent carbone, veuillez vous adressez à l'équipe Mushu",
                                payload={"cfp": cfp, "unit": unit})
 
