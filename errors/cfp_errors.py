@@ -1,7 +1,7 @@
 class APICallError(Exception):
     def __init__(self):
         Exception.__init__(self)
-        self.message = "Error while calling API"
+        self.message = "Erreur de réseau"
 
 
 class ProductNotFoundError(Exception):
@@ -13,4 +13,4 @@ class ProductNotFoundError(Exception):
 class APIResponseError(Exception):
     def __init__(self):
         Exception.__init__(self)
-        self.message = "Response from API is not readable"
+        self.message = "Les informations de la base de donnée ne sont pas utilisables"

@@ -38,6 +38,8 @@ def process_barcode():
         except:
             message = str(e)
         raise ApplicationError(message, payload={"barcode": barcode})
+    except Exception:
+        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu", payload={"barcode": barcode})
 
 
 @app.route("/equivalent")
