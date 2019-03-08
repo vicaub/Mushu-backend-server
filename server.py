@@ -39,17 +39,28 @@ def process_barcode():
             message = str(e)
         raise ApplicationError(message, payload={"barcode": barcode})
     except Exception:
-        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu", payload={"barcode": barcode})
+        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu",
+                               payload={"barcode": barcode})
 
 
 @app.route("/equivalent")
 def get_equivalent():
-    cfp = float(request.args.get('cfp'))
-    unit = request.args.get('unit')
-    if unit == 'g':
-        cfp /= 1000
-    equivalent = get_equiv_carbone(cfp)
-    return jsonify(equivalent)
+    try:
+        cfp = float(request.args.get('cfp'))
+        unit = request.args.get('unit')
+        if unit == 'g':
+            cfp /= 1000
+        equivalent = get_equiv_carbone(cfp)
+        return jsonify(equivalent)
+    except (APICallError, ProductNotFoundError, APIResponseError) as e:
+        try:
+            message = e.message
+        except:
+            message = str(e)
+        raise ApplicationError(message, payload={"cfp": cfp, "unit": unit})
+    except Exception:
+        raise ApplicationError("Une erreur est survenue, veuillez vous adressez à l'équipe Mushu",
+                               payload={"cfp": cfp, "unit": unit})
 
 
 if __name__ == "__main__":
