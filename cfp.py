@@ -87,37 +87,23 @@ def change_units(CFPdensity, weight, weightunit):
     """Calcul de l'empreinte carbone correspondant à la bonne quantité de produit dans une unité pertinente"""
     # Pour les unités de masses (kg, g, mg et celles de volumes appropriées)
     dictionnaire = {}
-    if weightunit == "kg":
+    truecfp = None
+
+    if weightunit == "kg" or weightunit == "l":
         truecfp = float(weight) * float(CFPdensity)
-        if truecfp >= 1:
-            dictionnaire["TotalCFP"] = truecfp
-            dictionnaire["CFPUnit"] = "kg"
-        else:
-            dictionnaire["TotalCFP"] = truecfp * 1000
-            dictionnaire["CFPUnit"] = "g"
-    elif weightunit == "g" or weightunit == "l":
+    elif weightunit == "g" or weightunit == "ml":
         truecfp = float(weight) * float(CFPdensity) * 0.001
-        if truecfp >= 1:
-            dictionnaire["TotalCFP"] = truecfp
-            dictionnaire["CFPUnit"] = "kg"
-        else:
-            dictionnaire["TotalCFP"] = truecfp * 1000
-            dictionnaire["CFPUnit"] = "g"
-    elif weightunit == "mg" or weightunit == "ml":
+    elif weightunit == "mg":
         truecfp = float(weight) * float(CFPdensity) * 0.000001
-        if truecfp >= 1:
-            dictionnaire["TotalCFP"] = truecfp
-            dictionnaire["CFPUnit"] = "kg"
-        else:
-            dictionnaire["TotalCFP"] = truecfp * 1000
-            dictionnaire["CFPUnit"] = "g"
     # Pour les unités de volumes restantes(cl)
     elif weightunit == "cl":
         truecfp = float(weight) * float(CFPdensity) * 0.01
-        if truecfp >= 1:
-            dictionnaire["TotalCFP"] = truecfp
-            dictionnaire["CFPUnit"] = "kg"
-        else:
-            dictionnaire["TotalCFP"] = truecfp * 1000
-            dictionnaire["CFPUnit"] = "g"
-    return (dictionnaire)
+
+    if truecfp >= 1:
+        dictionnaire["TotalCFP"] = truecfp
+        dictionnaire["CFPUnit"] = "kg"
+    else:
+        dictionnaire["TotalCFP"] = truecfp * 1000
+        dictionnaire["CFPUnit"] = "g"
+
+    return dictionnaire

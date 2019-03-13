@@ -64,8 +64,9 @@ def get_equivalent():
     except Exception as ex:
         print(''.join(traceback.format_exception(etype=type(ex), value=ex, tb=ex.__traceback__)))
         raise ApplicationError(
-            "Une erreur est survenue lors du calcul de votre équivalent carbone, vous pouvez signaler ce bug en envoyant "
-            "un email à l'équipe Mushu feedback.mushu@gmail.com")
+            "Une erreur est survenue lors du calcul de votre équivalent carbone, vous pouvez signaler ce bug en "
+            "envoyant un email à l'équipe Mushu feedback.mushu@gmail.com"
+        )
 
 
 if __name__ == "__main__":
