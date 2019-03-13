@@ -21,11 +21,14 @@ boissons = Product("Boissons", None,
                                      [Product("Soda", 1.39),
                                       Product("Eau gazeuse", 1.39),
                                       ]),
-                             Product("Boissons alcoolisées", None,
+                             Product("Alcool", None,
                                      [Product("Alcool pur", 1.56),
                                       Product("Champagne", 2.99),
                                       Product("Bière", 2.72),
-                                      Product("Vin", 1.21)
+                                      Product("Vin", 1.21),
+                                      Product("Vodka"),
+                                      Product("Whiskey"),
+                                      Product("Cidre")
                                       ])
                              ])
                     ])
