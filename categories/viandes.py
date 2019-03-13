@@ -22,6 +22,7 @@ volaille = Product("volaille", 1.07, [
 ## boeuf
 
 boeuf = Product("boeuf", 28.6, [
+    Product("viande boeuf"),
     Product("cote de boeuf", 34.94)
 ])
 
@@ -32,6 +33,7 @@ veau = Product("veau", 16.4)
 ## PORC
 
 porc = Product("porc", 5.9, [
+    Product("viande porc"),
     Product("lardon", 4.5),
     Product("saucisse porc", 4.4),
     Product("saucisson porc", 5.1),
@@ -46,6 +48,7 @@ lapin = Product("lapin", 4.9)
 ## AGNEAU
 
 agneau = Product("agneau", 25.58, [
+    Product("viande agneau"),
     Product("cotelette d'agneau", 33),
     Product("gigot d'agneau", 34.69)
 ])
