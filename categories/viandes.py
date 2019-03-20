@@ -34,7 +34,7 @@ veau = Product("veau", 16.4)
 
 porc = Product("porc", 5.9, [
     Product("viande porc"),
-    Product("lardon", 4.5),
+    Product("lardon", 9),
     Product("saucisse porc", 4.4),
     Product("saucisson porc", 5.1),
     Product("Filet mignon porc", 5.11),
