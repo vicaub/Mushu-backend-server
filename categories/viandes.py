@@ -33,6 +33,7 @@ veau = Product("veau", 16.4)
 ## PORC
 
 porc = Product("porc", 5.9, [
+    Product("gélatine"),
     Product("viande porc"),
     Product("lardon", 9),
     Product("saucisse porc", 4.4),
