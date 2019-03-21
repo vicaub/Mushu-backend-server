@@ -1,6 +1,6 @@
 from models.Product import Product
 
-legumes = Product('Legume', None, [
+legumes = Product('Légume', None, [
     Product('tomate', None, [
         Product('sauce tomate', 2.9),
         Product('tomate fraiche hors saison', 2.2),

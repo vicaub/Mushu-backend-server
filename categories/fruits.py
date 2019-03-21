@@ -1,6 +1,6 @@
 from models.Product import Product
 
-fruits = Product("fruit", None,
+fruits = Product("Fruit", None,
                  [Product("Pomme", None,
                           [
                               Product("pomme france", 0.3),

@@ -54,4 +54,4 @@ agneau = Product("agneau", 25.58, [
     Product("gigot d'agneau", 34.69)
 ])
 
-viandes = Product("viande", children=[volaille, boeuf, veau, porc, lapin, agneau])
+viandes = Product("Viande", children=[volaille, boeuf, veau, porc, lapin, agneau])
