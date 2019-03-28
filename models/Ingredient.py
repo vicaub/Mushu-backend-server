@@ -17,7 +17,10 @@ class Ingredient:
         self.percent = percent
         self.children = children
         self.match = None
-        self.ingredient_string = ingredient_string.replace(r"[\n\r]", "")
+        self.ingredient_string = ingredient_string
+        if ingredient_string:
+            self.ingredient_string = self.ingredient_string.replace(r"[\n\r]", "")
+
         self.cfp = None
 
         self.remove_useless_words()
