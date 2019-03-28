@@ -28,7 +28,6 @@ class TestCFP(unittest.TestCase):
         res1 = make_response(bc1)
         res2 = make_response(bc2)
         res3 = make_response(bc3)
-        print(res1)
         self.assertAlmostEqual(res1["CFPDensity"], 2.6188, 4)
         self.assertEqual(res1["CFPUnit"], "g")
         self.assertEqual(res2["CFPDensity"] / 2, res2["TotalCFP"])

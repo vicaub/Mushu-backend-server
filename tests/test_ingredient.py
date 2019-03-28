@@ -61,7 +61,7 @@ class TestIngredient(unittest.TestCase):
 
         ingredient = Ingredient("test", "Viande de porc - conservateurs : lactates, acétate de sodium, nitrate de sodium - sel - dextrose - antioxydant : isoascorbate de sodium - fumée.", percent=100)
         groups = ingredient.assign_children_percentage()
-        self.assertEqual(groups[0], 2)
+        self.assertEqual(groups[0], 7)
         self.assertEqual(groups[1], [])
         self.assertEqual(groups[2], 0)
 
