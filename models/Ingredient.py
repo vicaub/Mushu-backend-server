@@ -53,7 +53,10 @@ class Ingredient:
                         ingr_substring = self.ingredient_string[i_open_bracket + 1:i]
                         self.children.append(Ingredient(ingr_name, ingr_substring))
                         start = None
-                elif self.ingredient_string[i] == ',':
+                # elif self.ingredient_string[i] == ',':
+                elif self.ingredient_string[i] == ',' or (
+                        self.ingredient_string[i] == '-' and i - 1 > 0 and i + 1 < len(self.ingredient_string) and
+                        self.ingredient_string[i - 1] == " " and self.ingredient_string[i + 1] == " "):
                     if not self.ingredient_string[i + 1].isdigit():
                         if len(stack) == 0:
                             # si je ne suis pas au milieu de parenthèses
@@ -231,7 +234,8 @@ class Ingredient:
         Assigner les pourcentages sur le groupe de la fin (par moitié du précédent)
         i est le premier ingrédient auquel on doit assigner un pourcentage
         """
-        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "émulsifiant" ,"dextrose",
+        stop_liste_to_put = ["sel", "acidifiant", "conservateur", "emulisfient", "émulsifiants", "émulsifiant",
+                             "dextrose",
                              "correcteur d'acidité", "lactosérum", "acidifiants", "acidifiant", "antioxydants",
                              "antioxydant", "antibiotique", "stabilisants", "stabilisants", "stabilisant", "arôme",
                              "arômes", "colorants", "colorant", "contient", "enzyme", "épaississant", "édulcorants",
@@ -310,5 +314,3 @@ class Ingredient:
             for child in self.children:
                 json["children"].append(child.to_json())
         return json
-
-
