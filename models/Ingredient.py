@@ -13,6 +13,7 @@ class Ingredient:
         if children is None:
             children = []
         self.name = name.replace("_", "")
+        self.original_name = self.name
         self.percent = percent
         self.children = children
         self.match = None
@@ -305,7 +306,7 @@ class Ingredient:
 
     def to_json(self):
         json = dict()
-        json["name"] = self.name
+        json["name"] = self.original_name
         json["percent"] = self.percent
         if self.match:
             json["match"] = self.match.to_json()
