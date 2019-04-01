@@ -36,7 +36,9 @@ epicerie = Product("Épicerie", None, [
         Product("Origan", None),
         Product("Paprika"),
         Product("arome"),
-        Product("curcuma")
+        Product("curcuma"),
+        Product("sulfites"),
+        Product("girofle")
     ]),
     Product("Sauces", None, [
         Product("Ketchup", 2.70),
