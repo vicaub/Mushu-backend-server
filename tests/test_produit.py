@@ -1,7 +1,7 @@
-from models.Product import Product
+from server.models.Product import Product
 import unittest
 
-from categories import database
+from server.categories import database
 
 legume1 = Product("courgette", None)
 legume2 = Product("poivron", 1.3)
@@ -25,7 +25,7 @@ try:
 except TypeError:
     pass
 
-import categories.viandes as viandes
+import server.categories.viandes as viandes
 
 var = viandes.viandes
 

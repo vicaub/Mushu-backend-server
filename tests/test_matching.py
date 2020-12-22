@@ -1,10 +1,10 @@
 import unittest
 
-from categories.database import database
-from models.Ingredient import Ingredient
-from models.Matching import Matching
-from categories.produits_laitiers import produits_laitiers
-import categories.viandes as viandes
+from server.categories.database import database
+from server.models.Ingredient import Ingredient
+from server.models.Matching import Matching
+from server.categories.produits_laitiers import produits_laitiers
+import server.categories.viandes as viandes
 
 
 class TestMatching(unittest.TestCase):

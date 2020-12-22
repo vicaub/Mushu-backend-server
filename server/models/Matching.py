@@ -1,5 +1,4 @@
-from models.Product import Product
-from categories.database import database
+from server.categories.database import database
 from fuzzywuzzy import process as fuzzy
 from fuzzywuzzy import fuzz
 

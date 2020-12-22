@@ -1,7 +1,7 @@
 import requests
-from errors.cfp_errors import ProductNotFoundError, APICallError, APIResponseError
-from models.Ingredient import Ingredient
-from models.Matching import Matching
+from server.errors.cfp_errors import ProductNotFoundError, APICallError, APIResponseError
+from server.models.Ingredient import Ingredient
+from server.models.Matching import Matching
 import re
 import traceback
 

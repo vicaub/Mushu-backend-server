@@ -1,5 +1,5 @@
-from categories import fruits, legumes, poissons, produits_laitiers, viandes, epicerie, boissons
-from models.Product import Product
+from server.categories import legumes, poissons, fruits, produits_laitiers, boissons, viandes, epicerie
+from server.models.Product import Product
 
 categories = [
     fruits.fruits,

@@ -1,4 +1,4 @@
-from models.Product import Product
+from server.models.Product import Product
 
 epicerie = Product("Épicerie", None, [
     Product("Asaisonnement", None, [
