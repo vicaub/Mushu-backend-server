@@ -1,6 +1,9 @@
 run: build
 	docker run -it --rm -p 5000:5000 mushu-back:latest
 
+run-service: build
+	docker run --rm -p 5000:5000 mushu-back:latest
+
 build:
 	docker build . -t mushu-back:latest --target production
 
