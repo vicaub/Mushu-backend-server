@@ -35,28 +35,13 @@ Products in database are created with the Matching class and declare the sub pro
 
 ## Prerequisites
 
-You need Python 3 environment and libraries in requirements.txt
-
-
-You need python 3.6 installed and libraries located in requirements.txt file
-
-```
-sudo apt install python3
-```
-
-```
-sudo apt install python3-pip
-```
-
-```
-pip3 install -r requirements.txt
-```
+Prerequisites in Dockerfile
 
 ## How to run
 
 ### Locally
 ```
-python3 server.py
+make run
 ```
 
 ### On remote server

@@ -1,0 +1,12 @@
+[Unit]
+Description=Mushu service
+
+[Service]
+WorkingDirectory=/home/ec2-user/Mushu-backend-server
+ExecStart=/usr/bin/make run
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
