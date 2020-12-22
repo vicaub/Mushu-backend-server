@@ -25,7 +25,7 @@ COPY --from=builder /pyroot/ /pyroot/
 
 ADD server server
 
-CMD python3 -m server.server
+CMD gunicorn -b 0.0.0.0:5000 -w 4 server.server:app
 
 
 # Test builder

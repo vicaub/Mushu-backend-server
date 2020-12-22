@@ -70,4 +70,4 @@ def get_equivalent():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(HOST="0.0.0.0", PORT=5000)
