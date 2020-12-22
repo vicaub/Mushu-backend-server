@@ -1,6 +1,6 @@
 import unittest
 
-from cfp import openfoodfacts_api, get_cfp, make_response, build_weight, change_units
+from server.cfp import openfoodfacts_api, make_response, build_weight
 
 
 class TestCFP(unittest.TestCase):

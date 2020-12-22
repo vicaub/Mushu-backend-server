@@ -1,4 +1,4 @@
-from models.Product import Product
+from server.models.Product import Product
 
 legumes = Product('Légume', None, [
     Product('tomate', None, [

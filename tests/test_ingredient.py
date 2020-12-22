@@ -1,5 +1,5 @@
 import unittest
-from models.Ingredient import Ingredient
+from server.models.Ingredient import Ingredient
 
 
 # test parsing

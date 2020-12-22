@@ -1,8 +1,8 @@
 from flask import Flask, request, render_template, jsonify
-from cfp import make_response
-from equivalent import get_equiv_carbone
-from errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
-from errors.flask_errors import ApplicationError
+from server.cfp import make_response
+from server.equivalent import get_equiv_carbone
+from server.errors.cfp_errors import APICallError, ProductNotFoundError, APIResponseError
+from server.errors.flask_errors import ApplicationError
 import traceback
 
 app = Flask(__name__)
@@ -70,4 +70,4 @@ def get_equivalent():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
