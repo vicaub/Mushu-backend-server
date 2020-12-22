@@ -42,7 +42,9 @@ legumes = Product('Légume', None, [
     Product('radis', 0.5),
     Product('oignon', 0.5),
     Product('concombre', 1.4),
-    Product('champignon', 1.5),
+    Product('champignon', 1.5, [
+        Product('bolet')
+    ]),
     Product('avocat', 1.2),
     Product('olive', 0.9),
     Product('citrouille', 0.7),
